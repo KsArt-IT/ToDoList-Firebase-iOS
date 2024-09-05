@@ -362,8 +362,8 @@
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/uber/needle.git";
 			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 1.0.0;
+				branch = master;
+				kind = branch;
 			};
 		};
 		F1EE9B742C89D096000719D9 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {

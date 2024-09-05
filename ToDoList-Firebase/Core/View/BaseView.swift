@@ -8,7 +8,7 @@
 
 import UIKit
 
-open class BaseView: UIView {
+class BaseView: UIView {
 
     convenience init() {
         self.init(frame: .zero)

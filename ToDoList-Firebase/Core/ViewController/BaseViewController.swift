@@ -7,11 +7,11 @@
 
 import UIKit
 
-open class BaseViewController: UIViewController {
+class BaseViewController: UIViewController {
 
-    var screen: BaseView = BaseView()
+    private var _screen: UIView?
 
-    open override func viewDidLoad() {
+    override func viewDidLoad() {
         super.viewDidLoad()
 
         configureViews()
@@ -22,20 +22,27 @@ open class BaseViewController: UIViewController {
 
 @objc extension BaseViewController {
 
+    func addScreen(screen: UIView) {
+        _screen = screen
+    }
+    
     func configureViews() {
-        view.addSubview(screen)
+        if let _screen {
+            view.addSubview(_screen)
+        }
     }
 
     func configureConstraints() {
+        if let _screen {
+            _screen.translatesAutoresizingMaskIntoConstraints = false
 
-        screen.translatesAutoresizingMaskIntoConstraints = false
-
-        NSLayoutConstraint.activate([
-            screen.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
-            screen.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
-            screen.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            screen.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
-        ])
+            NSLayoutConstraint.activate([
+                _screen.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+                _screen.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
+                _screen.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+                _screen.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+            ])
+        }
     }
 
     func configureAppearance() {

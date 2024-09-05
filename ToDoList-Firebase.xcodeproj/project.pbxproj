@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		F19B76D82C89DEE40048FF42 /* NeedleFoundation in Frameworks */ = {isa = PBXBuildFile; productRef = F19B76D72C89DEE40048FF42 /* NeedleFoundation */; };
 		F1EE9B762C89D096000719D9 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = F1EE9B752C89D096000719D9 /* FirebaseAuth */; };
 		F1EE9B782C89D096000719D9 /* FirebaseDatabase in Frameworks */ = {isa = PBXBuildFile; productRef = F1EE9B772C89D096000719D9 /* FirebaseDatabase */; };
 /* End PBXBuildFile section */
@@ -35,6 +36,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F1EE9B782C89D096000719D9 /* FirebaseDatabase in Frameworks */,
+				F19B76D82C89DEE40048FF42 /* NeedleFoundation in Frameworks */,
 				F1EE9B762C89D096000719D9 /* FirebaseAuth in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -80,6 +82,7 @@
 			packageProductDependencies = (
 				F1EE9B752C89D096000719D9 /* FirebaseAuth */,
 				F1EE9B772C89D096000719D9 /* FirebaseDatabase */,
+				F19B76D72C89DEE40048FF42 /* NeedleFoundation */,
 			);
 			productName = "ToDoList-Firebase";
 			productReference = F1EE9B2E2C89C079000719D9 /* ToDoList-Firebase.app */;
@@ -114,6 +117,7 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				F1EE9B742C89D096000719D9 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+				F19B76D62C89DEE40048FF42 /* XCRemoteSwiftPackageReference "needle" */,
 			);
 			productRefGroup = F1EE9B2F2C89C079000719D9 /* Products */;
 			projectDirPath = "";
@@ -354,6 +358,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		F19B76D62C89DEE40048FF42 /* XCRemoteSwiftPackageReference "needle" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/uber/needle.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.0;
+			};
+		};
 		F1EE9B742C89D096000719D9 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
@@ -365,6 +377,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		F19B76D72C89DEE40048FF42 /* NeedleFoundation */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = F19B76D62C89DEE40048FF42 /* XCRemoteSwiftPackageReference "needle" */;
+			productName = NeedleFoundation;
+		};
 		F1EE9B752C89D096000719D9 /* FirebaseAuth */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = F1EE9B742C89D096000719D9 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;

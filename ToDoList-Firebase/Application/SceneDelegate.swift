@@ -10,23 +10,27 @@ import UIKit
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     var window: UIWindow?
+    private var appCoordinator: AppCoordinator?
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         guard let windowScene = (scene as? UIWindowScene) else { return }
 
-        let vc = LoginViewController()
-        let navigationController = UINavigationController(rootViewController: vc)
-
         window = UIWindow(windowScene: windowScene)
+
+        let navigationController = UINavigationController()
+        let rootComponent = RootComponent()
+        appCoordinator = AppCoordinator(navController: navigationController, component: rootComponent)
+        appCoordinator?.navigation(to: .start)
+
         window?.rootViewController = navigationController
         window?.makeKeyAndVisible()
     }
 
     func sceneDidDisconnect(_ scene: UIScene) {
-        // Called as the scene is being released by the system.
-        // This occurs shortly after the scene enters the background, or when its session is discarded.
-        // Release any resources associated with this scene that can be re-created the next time the scene connects.
-        // The scene may re-connect later, as its session was not necessarily discarded (see `application:didDiscardSceneSessions` instead).
+        // Вызывается, когда сцена отключается. Можно освободить ресурсы.
+        print("SceneDelegate.deinit")
+        appCoordinator?.finish()
+        appCoordinator = nil
     }
 
     func sceneDidBecomeActive(_ scene: UIScene) {

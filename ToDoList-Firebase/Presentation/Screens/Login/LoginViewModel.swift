@@ -8,5 +8,12 @@
 import Foundation
 
 class LoginViewModel: TaskViewModel {
-    
+
+    private let coordinator: Coordinator
+    private let repository: AuthRepository
+
+    init(coordinator: Coordinator, repository: AuthRepository) {
+        self.coordinator = coordinator
+        self.repository = repository
+    }
 }

@@ -8,5 +8,6 @@
 import Foundation
 
 protocol AuthRepository {
-    
+    func signIn(email: String, password: String) async -> Result<Bool, Error>
+    func signUp(email: String, password: String) async -> Result<Bool, Error>
 }

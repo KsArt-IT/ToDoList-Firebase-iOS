@@ -23,7 +23,15 @@ class LoginViewController: BaseViewController {
     
     override func configureViews() {
         addScreen(screen: screen)
-        
+        screen.onLoginClick { [weak self] login, password in
+            print("Login in")
+            self?.viewModel.login(email: login, password: password)
+        }
+
         super.configureViews()
+    }
+
+    override func configureAppearance() {
+        super.configureAppearance()
     }
 }

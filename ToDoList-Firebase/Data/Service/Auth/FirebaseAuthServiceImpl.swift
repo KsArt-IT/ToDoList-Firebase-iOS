@@ -19,14 +19,16 @@ final class FirebaseAuthServiceImpl: AuthService {
         } catch {
             return if let errorCode = AuthErrorCode(rawValue: error._code) {
                 switch errorCode {
-                    case .wrongPassword:
-                            .failure(NetworkServiceError.authPasswordError(R.Strings.wrongPassword))
                     case .invalidEmail:
-                            .failure(NetworkServiceError.authPasswordError(R.Strings.wrongPassword))
+                            .failure(NetworkServiceError.invalidEmail)
+                    case .wrongPassword:
+                            .failure(NetworkServiceError.wrongPassword)
                     case .userNotFound:
-                            .failure(NetworkServiceError.authPasswordError(R.Strings.wrongPassword))
+                            .failure(NetworkServiceError.userNotFound)
                     case .userDisabled:
-                            .failure(NetworkServiceError.authPasswordError(R.Strings.wrongPassword))
+                            .failure(NetworkServiceError.userDisabled)
+                    case .invalidCredential:
+                            .failure(NetworkServiceError.invalidCredential)
                     default:
                             .failure(NetworkServiceError.networkError(error))
                 }
@@ -46,11 +48,11 @@ final class FirebaseAuthServiceImpl: AuthService {
             return if let errorCode = AuthErrorCode(rawValue: error._code) {
                 switch errorCode {
                     case .emailAlreadyInUse:
-                            .failure(NetworkServiceError.authPasswordError(R.Strings.emailAlreadyInUse))
-                    case .weakPassword:
-                            .failure(NetworkServiceError.authPasswordError(R.Strings.weakPassword))
+                            .failure(NetworkServiceError.emailAlreadyInUse)
                     case .invalidEmail:
-                            .failure(NetworkServiceError.authPasswordError(R.Strings.invalidEmail))
+                            .failure(NetworkServiceError.invalidEmail)
+                    case .weakPassword:
+                            .failure(NetworkServiceError.weakPassword)
                     default:
                             .failure(NetworkServiceError.networkError(error))
                 }

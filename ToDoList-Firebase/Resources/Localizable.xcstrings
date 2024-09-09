@@ -51,6 +51,29 @@
         }
       }
     },
+    "invalidCredential" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The supplied auth credential is malformed or has expired"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Учетные данные неверны или срок их действия истек"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Облікові дані неправильні або термін їх дії закінчився"
+          }
+        }
+      }
+    },
     "invalidEmail" : {
       "extractionState" : "manual",
       "localizations" : {

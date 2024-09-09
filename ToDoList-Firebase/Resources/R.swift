@@ -23,6 +23,7 @@ enum R {
         // auth errors
         static let userNotFound = String(localized: "userNotFound")
         static let userDisabled = String(localized: "userDisabled")
+        static let invalidCredential = String(localized: "invalidCredential")
 
         static let invalidEmail = String(localized: "invalidEmail")
         static let emailAlreadyInUse = String(localized: "emailAlreadyInUse")

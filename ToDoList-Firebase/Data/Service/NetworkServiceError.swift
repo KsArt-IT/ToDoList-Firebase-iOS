@@ -14,10 +14,17 @@ enum NetworkServiceError: Error {
     case statusCode(code: Int, message: String)
     case decodingError(DecodingError)
     case networkError(Error)
-    case authEmailError(String) // вывести текст под email
-    case authPasswordError(String) // вывести текст под паролем
-    case authUserError(String) // вывести алерт
     case cancelled // отменен запрос
+    // FirebaseAuth
+    case invalidEmail
+    case emailAlreadyInUse
+
+    case wrongPassword
+    case weakPassword
+
+    case userNotFound
+    case userDisabled
+    case invalidCredential
 
     var localizedDescription: String {
         switch self {
@@ -31,14 +38,22 @@ enum NetworkServiceError: Error {
                 "Decoding failed with error: \(error.localizedDescription)."
             case .networkError(let error):
                 "Network error occurred: \(error.localizedDescription)."
-            case .authEmailError(let str):
-                str
-            case .authPasswordError(let str):
-                str
-            case .authUserError(let str):
-                str
             case .cancelled:
                 ""
+            case .invalidEmail:
+                R.Strings.invalidEmail
+            case .emailAlreadyInUse:
+                R.Strings.emailAlreadyInUse
+            case .wrongPassword:
+                R.Strings.wrongPassword
+            case .weakPassword:
+                R.Strings.weakPassword
+            case .userNotFound:
+                R.Strings.userNotFound
+            case .userDisabled:
+                R.Strings.userDisabled
+            case .invalidCredential:
+                R.Strings.invalidCredential
         }
     }
 }

@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Combine
 
 final class TextFieldView: BaseView {
 
@@ -27,7 +28,6 @@ final class TextFieldView: BaseView {
         view.numberOfLines = 3
         return view
     }()
-
     private var isError: Bool = false {
         didSet {
             updateAppearance()
@@ -37,13 +37,19 @@ final class TextFieldView: BaseView {
     private let disabledAlpha: CGFloat = 0.3
 
     // MARK: - Поля
+    public var textPublisher: AnyPublisher<String, Never> {
+        NotificationCenter.default
+            .publisher(for: UITextField.textDidChangeNotification, object: textField)
+            .map { ($0.object as? UITextField)?.text ?? "" }
+            .eraseToAnyPublisher()
+    }
+
     var text: String? {
         get {
             self.textField.text
         }
         set {
             self.textField.text = newValue
-            textField.isSecureTextEntry = true
         }
     }
 

@@ -41,7 +41,6 @@ class LoginViewModel: TaskViewModel {
     }
 
     public func submitLogin() {
-        print("email: \(email) password: \(password)")
         guard !email.isEmpty && !password.isEmpty else { return }
 
         launch { [weak self] in

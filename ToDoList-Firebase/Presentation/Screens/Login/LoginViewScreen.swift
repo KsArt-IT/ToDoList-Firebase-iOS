@@ -63,6 +63,12 @@ class LoginViewScreen: BaseView {
         passwordTextField.textPublisher
     }
 
+    @Published public var isLoginButtonEnabled = false {
+        didSet {
+            loginButton.isEnabled = isLoginButtonEnabled
+        }
+    }
+
     public func clearError() {
         setEmailError()
         setPasswordError()
@@ -74,10 +80,6 @@ class LoginViewScreen: BaseView {
 
     public func setPasswordError(_ message: String? = nil) {
         passwordTextField.helperText = message
-    }
-
-    public func setLoginButton(on enabled: Bool = false) {
-        loginButton.isEnabled = enabled
     }
 
     public func onClickButtons(login: @escaping OnClick, loginGoogle: @escaping OnClick, registration: @escaping OnClick) {

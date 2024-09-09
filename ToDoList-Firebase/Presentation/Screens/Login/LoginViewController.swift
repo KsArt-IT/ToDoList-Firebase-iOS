@@ -70,8 +70,8 @@ class LoginViewController: BaseViewController {
             }
         }.store(in: &cancellables)
 
-        viewModel.isLoginButtonEnabled.sink { [weak self] isEnabled in
-            self?.screen.setLoginButton(on: isEnabled)
-        }.store(in: &cancellables)
+        viewModel.isLoginButtonEnabled
+            .assign(to: \.isLoginButtonEnabled, on: screen)
+            .store(in: &cancellables)
     }
 }

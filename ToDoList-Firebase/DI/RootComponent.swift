@@ -23,4 +23,8 @@ class RootComponent: BootstrapComponent {
         LoginComponent(parent: self)
     }
 
+    var registrationComponent: RegistrationComponent {
+        RegistrationComponent(parent: self)
+    }
+
 }

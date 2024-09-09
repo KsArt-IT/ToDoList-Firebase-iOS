@@ -177,6 +177,17 @@
         }
       }
     },
+    "passwordConfirm" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Confirm Password"
+          }
+        }
+      }
+    },
     "PasswordPlaceholder" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -196,6 +207,29 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Введіть свій пароль"
+          }
+        }
+      }
+    },
+    "passwordsDoNotMatch" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Passwords do not match"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Пароли не совпадают"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Паролі не збігаються"
           }
         }
       }

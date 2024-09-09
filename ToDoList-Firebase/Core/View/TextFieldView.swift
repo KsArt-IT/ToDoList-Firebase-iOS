@@ -193,7 +193,6 @@ extension TextFieldView {
         let small: CGFloat = 8
         let sizeIcon: CGFloat = 24
         let labelOffset: CGFloat = borderCornerRadius * 2 + small * 2
-        print(labelOffset)
 
         let textFieldLeadingAnchor = leftIcon.image != nil ? leftIcon.trailingAnchor : self.leadingAnchor
         let textFieldTrailingAnchor = rightIcon.image != nil ? rightIcon.leadingAnchor : self.trailingAnchor

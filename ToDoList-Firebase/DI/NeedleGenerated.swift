@@ -17,6 +17,19 @@ private func parent1(_ component: NeedleFoundation.Scope) -> NeedleFoundation.Sc
 
 #if !NEEDLE_DYNAMIC
 
+private class RepositoryDependency7b8a2c1cc1880bf5adf4Provider: RepositoryDependency {
+    var authRepository: AuthRepository {
+        return rootComponent.authRepository
+    }
+    private let rootComponent: RootComponent
+    init(rootComponent: RootComponent) {
+        self.rootComponent = rootComponent
+    }
+}
+/// ^->RootComponent->RegistrationComponent
+private func factory3fb5fdb9b985699e0376b3a8f24c1d289f2c0f2e(_ component: NeedleFoundation.Scope) -> AnyObject {
+    return RepositoryDependency7b8a2c1cc1880bf5adf4Provider(rootComponent: parent1(component) as! RootComponent)
+}
 private class RepositoryDependency006c7d880fec28863ecaProvider: RepositoryDependency {
     var authRepository: AuthRepository {
         return rootComponent.authRepository
@@ -32,6 +45,11 @@ private func factorya688cdcfe16e346b8256b3a8f24c1d289f2c0f2e(_ component: Needle
 }
 
 #else
+extension RegistrationComponent: Registration {
+    public func registerItems() {
+        keyPathToName[\RepositoryDependency.authRepository] = "authRepository-AuthRepository"
+    }
+}
 extension LoginComponent: Registration {
     public func registerItems() {
         keyPathToName[\RepositoryDependency.authRepository] = "authRepository-AuthRepository"
@@ -59,6 +77,7 @@ private func registerProviderFactory(_ componentPath: String, _ factory: @escapi
 #if !NEEDLE_DYNAMIC
 
 @inline(never) private func register1() {
+    registerProviderFactory("^->RootComponent->RegistrationComponent", factory3fb5fdb9b985699e0376b3a8f24c1d289f2c0f2e)
     registerProviderFactory("^->RootComponent->LoginComponent", factorya688cdcfe16e346b8256b3a8f24c1d289f2c0f2e)
     registerProviderFactory("^->RootComponent", factoryEmptyDependencyProvider)
 }

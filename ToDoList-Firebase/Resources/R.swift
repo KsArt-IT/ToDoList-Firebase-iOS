@@ -14,7 +14,9 @@ enum R {
         static let emailPlaceholder = String(localized: "EmailPlaceholder")
 
         static let password = String(localized: "Password")
+        static let passwordConfirm = String(localized: "passwordConfirm")
         static let passwordPlaceholder = String(localized: "PasswordPlaceholder")
+        static let passwordsDoNotMatch = String(localized: "passwordsDoNotMatch")
 
         static let loginButton = String(localized: "Login")
         static let loginGoogleButton = String(localized: "loginGoogle")
@@ -32,7 +34,6 @@ enum R {
         static let wrongPassword = String(localized: "wrongPassword")
 
         static let titleError = String(localized: "Error")
-
 
     }
 }

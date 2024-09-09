@@ -40,6 +40,7 @@ enum Route {
     case root
     case start
     case main
+    case back
     case loginGoogle
     case registration
     case detail(id: Int)

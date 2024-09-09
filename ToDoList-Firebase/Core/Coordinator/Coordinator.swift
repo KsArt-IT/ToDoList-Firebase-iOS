@@ -39,5 +39,8 @@ extension Coordinator {
 enum Route {
     case root
     case start
+    case main
+    case loginGoogle
+    case registration
     case detail(id: Int)
 }

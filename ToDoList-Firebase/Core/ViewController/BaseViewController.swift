@@ -17,6 +17,7 @@ class BaseViewController: UIViewController {
         configureViews()
         configureConstraints()
         configureAppearance()
+        binding()
     }
 }
 
@@ -50,6 +51,7 @@ class BaseViewController: UIViewController {
         view.backgroundColor = .background
     }
 
+    func binding() {}
 }
 
 // MARK: - Show Alert

@@ -30,5 +30,9 @@ enum R {
 
         static let weakPassword = String(localized: "weakPassword")
         static let wrongPassword = String(localized: "wrongPassword")
+
+        static let titleError = String(localized: "Error")
+
+
     }
 }

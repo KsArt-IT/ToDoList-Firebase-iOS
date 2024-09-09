@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Combine
 
 class LoginViewScreen: BaseView {
 
@@ -47,16 +48,57 @@ class LoginViewScreen: BaseView {
         return button
     }()
 
-    typealias OnLoginClick = ((login: String, password: String)) -> Void
-    private var clickLogin: OnLoginClick?
+    typealias OnClick = () -> Void
+    private var clickLogin: OnClick?
+    private var clickLoginGoogle: OnClick?
+    private var clickRegistration: OnClick?
 
-    public func onLoginClick(onClick: @escaping OnLoginClick) {
-        self.clickLogin = onClick
+    private var cancellables = Set<AnyCancellable>()
+
+    public var onEmailTextChange: AnyPublisher<String, Never> {
+        loginTextField.textPublisher
     }
 
-    @objc private func clickLoginButton() {
-        clickLogin?((login: loginTextField.text ?? "", password: passwordTextField.text ?? ""))
+    public var onPasswordTextChange: AnyPublisher<String, Never> {
+        passwordTextField.textPublisher
     }
+
+    public func clearError() {
+        setEmailError()
+        setPasswordError()
+    }
+
+    public func setEmailError(_ message: String? = nil) {
+        loginTextField.helperText = message
+    }
+
+    public func setPasswordError(_ message: String? = nil) {
+        passwordTextField.helperText = message
+    }
+
+    public func setLoginButton(on enabled: Bool = false) {
+        loginButton.isEnabled = enabled
+    }
+
+    public func onClickButtons(login: @escaping OnClick, loginGoogle: @escaping OnClick, registration: @escaping OnClick) {
+        self.clickLogin = login
+        self.clickLoginGoogle = loginGoogle
+        self.clickRegistration = registration
+    }
+
+    @objc private func clickButton(sender: UIButton) {
+        switch sender {
+            case loginButton:
+                clickLogin?()
+            case loginGoogleButton:
+                clickLoginGoogle?()
+            case registrationButton:
+                clickRegistration?()
+            default:
+                break
+        }
+    }
+
 }
 
 extension LoginViewScreen {
@@ -69,7 +111,9 @@ extension LoginViewScreen {
         addSubview(loginGoogleButton)
         addSubview(registrationButton)
 
-        loginButton.addTarget(self, action: #selector(clickLoginButton), for: .touchUpInside)
+        loginButton.addTarget(self, action: #selector(clickButton(sender:)), for: .touchUpInside)
+        loginGoogleButton.addTarget(self, action: #selector(clickButton(sender:)), for: .touchUpInside)
+        registrationButton.addTarget(self, action: #selector(clickButton(sender:)), for: .touchUpInside)
     }
 
     override func configureConstraints() {
@@ -109,6 +153,5 @@ extension LoginViewScreen {
         backgroundColor = .blue
         loginTextField.titleBackgroundColor = .blue
         passwordTextField.titleBackgroundColor = .blue
-        passwordTextField.isSecureTextEntry = true
     }
 }

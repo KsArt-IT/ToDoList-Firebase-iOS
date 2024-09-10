@@ -47,11 +47,18 @@ class LoginViewScreen: BaseView {
         button.configuration = UIButton.Configuration.tinted()
         return button
     }()
+    private let resetPasswordButton: UIButton = {
+        let button = UIButton()
+        button.setTitle(R.Strings.passwordForgot, for: .normal)
+        button.configuration = UIButton.Configuration.tinted()
+        return button
+    }()
 
     typealias OnClick = () -> Void
     private var clickLogin: OnClick?
     private var clickLoginGoogle: OnClick?
     private var clickRegistration: OnClick?
+    private var clickResetPassword: OnClick?
 
     private var cancellables = Set<AnyCancellable>()
 
@@ -82,10 +89,11 @@ class LoginViewScreen: BaseView {
         passwordTextField.helperText = message
     }
 
-    public func onClickButtons(login: @escaping OnClick, loginGoogle: @escaping OnClick, registration: @escaping OnClick) {
+    public func onClickButtons(login: @escaping OnClick, loginGoogle: @escaping OnClick, registration: @escaping OnClick, resetPassword: @escaping OnClick) {
         self.clickLogin = login
         self.clickLoginGoogle = loginGoogle
         self.clickRegistration = registration
+        self.clickResetPassword = resetPassword
     }
 
     @objc private func clickButton(sender: UIButton) {
@@ -96,6 +104,8 @@ class LoginViewScreen: BaseView {
                 clickLoginGoogle?()
             case registrationButton:
                 clickRegistration?()
+            case resetPasswordButton:
+                clickResetPassword?()
             default:
                 break
         }
@@ -112,10 +122,12 @@ extension LoginViewScreen {
         addSubview(loginButton)
         addSubview(loginGoogleButton)
         addSubview(registrationButton)
+        addSubview(resetPasswordButton)
 
         loginButton.addTarget(self, action: #selector(clickButton(sender:)), for: .touchUpInside)
         loginGoogleButton.addTarget(self, action: #selector(clickButton(sender:)), for: .touchUpInside)
         registrationButton.addTarget(self, action: #selector(clickButton(sender:)), for: .touchUpInside)
+        resetPasswordButton.addTarget(self, action: #selector(clickButton(sender:)), for: .touchUpInside)
     }
 
     override func configureConstraints() {
@@ -126,6 +138,7 @@ extension LoginViewScreen {
         loginButton.translatesAutoresizingMaskIntoConstraints = false
         loginGoogleButton.translatesAutoresizingMaskIntoConstraints = false
         registrationButton.translatesAutoresizingMaskIntoConstraints = false
+        resetPasswordButton.translatesAutoresizingMaskIntoConstraints = false
 
         NSLayoutConstraint.activate([
             loginTextField.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: Constants.medium),
@@ -136,8 +149,11 @@ extension LoginViewScreen {
             passwordTextField.topAnchor.constraint(equalTo: loginTextField.bottomAnchor, constant: Constants.medium),
             passwordTextField.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -Constants.medium),
 
+            resetPasswordButton.topAnchor.constraint(equalTo: passwordTextField.bottomAnchor, constant: Constants.medium),
+            resetPasswordButton.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -Constants.medium),
+
             loginButton.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: Constants.medium),
-            loginButton.topAnchor.constraint(equalTo: passwordTextField.bottomAnchor, constant: Constants.large),
+            loginButton.topAnchor.constraint(equalTo: resetPasswordButton.bottomAnchor, constant: Constants.medium),
             loginButton.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -Constants.medium),
 
             loginGoogleButton.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: Constants.medium),

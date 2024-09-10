@@ -62,4 +62,28 @@ final class FirebaseAuthServiceImpl: AuthService {
         }
     }
 
+    func resetPassword(email: String) async -> Result<Bool, Error>{
+
+        do {
+            try await Auth.auth().sendPasswordReset(withEmail: email)
+            print("Auth result=Ok")
+            return .success(true)
+        } catch {
+            return if let errorCode = AuthErrorCode(rawValue: error._code) {
+                switch errorCode {
+                    case .emailAlreadyInUse:
+                            .failure(NetworkServiceError.emailAlreadyInUse)
+                    case .invalidEmail:
+                            .failure(NetworkServiceError.invalidEmail)
+                    case .weakPassword:
+                            .failure(NetworkServiceError.weakPassword)
+                    default:
+                            .failure(NetworkServiceError.networkError(error))
+                }
+            } else {
+                .failure(NetworkServiceError.networkError(error))
+            }
+        }
+    }
+
 }

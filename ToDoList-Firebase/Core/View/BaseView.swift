@@ -8,6 +8,8 @@
 
 import UIKit
 
+typealias OnClick = () -> Void
+
 class BaseView: UIView {
 
     convenience init() {

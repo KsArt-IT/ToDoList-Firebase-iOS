@@ -47,7 +47,6 @@ class RegistrationViewScreen: BaseView {
         return button
     }()
 
-    typealias OnClick = () -> Void
     private var clickRegistration: OnClick?
 
     public var onEmailTextChange: AnyPublisher<String, Never> {

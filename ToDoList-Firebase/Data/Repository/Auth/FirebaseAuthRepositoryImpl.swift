@@ -22,4 +22,8 @@ final class FirebaseAuthRepositoryImpl: AuthRepository {
     func signUp(email: String, password: String) async -> Result<Bool, Error> {
         await service.signUp(email: email, password: password)
     }
+
+    func resetPassword(email: String) async -> Result<Bool, Error> {
+        await service.resetPassword(email: email)
+    }
 }

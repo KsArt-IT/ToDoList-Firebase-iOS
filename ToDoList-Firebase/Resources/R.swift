@@ -10,17 +10,22 @@ import Foundation
 enum R {
 
     enum Strings {
+        // email
         static let email = String(localized: "Email")
         static let emailPlaceholder = String(localized: "EmailPlaceholder")
 
+        // password
         static let password = String(localized: "Password")
         static let passwordConfirm = String(localized: "passwordConfirm")
         static let passwordPlaceholder = String(localized: "PasswordPlaceholder")
         static let passwordsDoNotMatch = String(localized: "passwordsDoNotMatch")
+        static let passwordForgot = String(localized: "passwordForgot")
 
+        // buttons
         static let loginButton = String(localized: "Login")
         static let loginGoogleButton = String(localized: "loginGoogle")
         static let registrationButton = String(localized: "registrationButton")
+        static let resetButton = String(localized: "resetButton")
 
         // auth errors
         static let userNotFound = String(localized: "userNotFound")
@@ -33,7 +38,14 @@ enum R {
         static let weakPassword = String(localized: "weakPassword")
         static let wrongPassword = String(localized: "wrongPassword")
 
+        // alert
         static let titleError = String(localized: "Error")
+        static let passwordResetRequestSent = String(localized: "passwordResetRequestSent")
 
+        // title screen
+        static let titleMain = String(localized: "titleMain")
+        static let titleLogin = String(localized: "titleLogin")
+        static let titleRegistration = String(localized: "titleRegistration")
+        static let titleReset = String(localized: "titleReset")
     }
 }

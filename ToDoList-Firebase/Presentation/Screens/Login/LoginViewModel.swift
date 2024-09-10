@@ -80,4 +80,8 @@ class LoginViewModel: TaskViewModel {
         coordinator?.navigation(to: .registration)
     }
 
+    public func toResetPassword() {
+        coordinator?.navigation(to: .resetPassword)
+    }
+
 }

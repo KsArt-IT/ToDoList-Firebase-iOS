@@ -27,4 +27,8 @@ class RootComponent: BootstrapComponent {
         RegistrationComponent(parent: self)
     }
 
+    var resetPasswordComponent: ResetPasswordComponent {
+        ResetPasswordComponent(parent: self)
+    }
+
 }

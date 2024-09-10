@@ -13,6 +13,7 @@ final class LoginCoordinator: BaseCoordinator {
         switch route {
             case .start: startLoginFlow()
             case .registration: startRegistrationFlow()
+            case .resetPassword: startResetPasswordFlow()
             case .back: navController?.popViewController(animated: true)
             default: break
         }
@@ -25,6 +26,11 @@ final class LoginCoordinator: BaseCoordinator {
 
     private func startRegistrationFlow() {
         let vc = component.registrationComponent.viewController(coordinator: self)
+        navController?.pushViewController(vc, animated: true)
+    }
+
+    private func startResetPasswordFlow() {
+        let vc = component.resetPasswordComponent.viewController(coordinator: self)
         navController?.pushViewController(vc, animated: true)
     }
 

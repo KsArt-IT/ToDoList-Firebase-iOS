@@ -46,7 +46,8 @@ class LoginViewController: BaseViewController {
         screen.onClickButtons(
             login: self.viewModel.submitLogin,
             loginGoogle: self.viewModel.toLoginGoogle,
-            registration: self.viewModel.toRegistration
+            registration: self.viewModel.toRegistration,
+            resetPassword: self.viewModel.toResetPassword
         )
 
         viewModel.$viewStates.sink { [weak self] state in

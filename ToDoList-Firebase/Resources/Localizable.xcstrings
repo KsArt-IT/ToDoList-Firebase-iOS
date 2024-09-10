@@ -16,13 +16,13 @@
         },
         "ru" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "Этот email уже используется."
           }
         },
         "uk" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "Цей email вже використовується."
           }
         }
@@ -108,7 +108,7 @@
         },
         "ru" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "Неверный формат email."
           }
         },
@@ -148,7 +148,7 @@
         },
         "ru" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "Войти с учетной записью Google"
           }
         },
@@ -185,6 +185,41 @@
             "state" : "translated",
             "value" : "Confirm Password"
           }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Подтвердите пароль"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Підтвердьте пароль"
+          }
+        }
+      }
+    },
+    "passwordForgot" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Forgot your password?"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Забыли пароль?"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Забули свій пароль?"
+          }
         }
       }
     },
@@ -207,6 +242,29 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Введіть свій пароль"
+          }
+        }
+      }
+    },
+    "passwordResetRequestSent" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Password reset request sent!\\nPlease check your mailbox!"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Запрос на сброс пароля отправлен!\\nПроверьте пожалуйста свой почтовый ящик!"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Запит на скидання пароля надіслано!\\nПеревірте будь ласка свою поштову скриньку!"
           }
         }
       }
@@ -245,17 +303,52 @@
         },
         "ru" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "Зарегистрироваться"
           }
         },
         "uk" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "Зареєструватись"
           }
         }
       }
+    },
+    "resetButton" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reset password"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Сбросить пароль"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Скинути пароль"
+          }
+        }
+      }
+    },
+    "titleLogin" : {
+
+    },
+    "titleMain" : {
+
+    },
+    "titleRegistration" : {
+
+    },
+    "titleReset" : {
+
     },
     "userDisabled" : {
       "extractionState" : "manual",
@@ -268,7 +361,7 @@
         },
         "ru" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "Учётная запись пользователя заблокирована."
           }
         },
@@ -291,13 +384,13 @@
         },
         "ru" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "Пользователь с таким email не существует."
           }
         },
         "uk" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "Користувач із таким email не існує."
           }
         }
@@ -314,7 +407,7 @@
         },
         "ru" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "Пароль слишком слабый."
           }
         },
@@ -337,7 +430,7 @@
         },
         "ru" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "Введён неверный пароль."
           }
         },

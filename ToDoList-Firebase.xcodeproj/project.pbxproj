@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		F100D1A72C90C0D3008274A4 /* GoogleSignInSwift in Frameworks */ = {isa = PBXBuildFile; productRef = F100D1A62C90C0D3008274A4 /* GoogleSignInSwift */; };
 		F19B76D82C89DEE40048FF42 /* NeedleFoundation in Frameworks */ = {isa = PBXBuildFile; productRef = F19B76D72C89DEE40048FF42 /* NeedleFoundation */; };
 		F1EE9B762C89D096000719D9 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = F1EE9B752C89D096000719D9 /* FirebaseAuth */; };
 		F1EE9B782C89D096000719D9 /* FirebaseDatabase in Frameworks */ = {isa = PBXBuildFile; productRef = F1EE9B772C89D096000719D9 /* FirebaseDatabase */; };
@@ -38,6 +39,7 @@
 				F1EE9B782C89D096000719D9 /* FirebaseDatabase in Frameworks */,
 				F19B76D82C89DEE40048FF42 /* NeedleFoundation in Frameworks */,
 				F1EE9B762C89D096000719D9 /* FirebaseAuth in Frameworks */,
+				F100D1A72C90C0D3008274A4 /* GoogleSignInSwift in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -83,6 +85,7 @@
 				F1EE9B752C89D096000719D9 /* FirebaseAuth */,
 				F1EE9B772C89D096000719D9 /* FirebaseDatabase */,
 				F19B76D72C89DEE40048FF42 /* NeedleFoundation */,
+				F100D1A62C90C0D3008274A4 /* GoogleSignInSwift */,
 			);
 			productName = "ToDoList-Firebase";
 			productReference = F1EE9B2E2C89C079000719D9 /* ToDoList-Firebase.app */;
@@ -118,6 +121,7 @@
 			packageReferences = (
 				F1EE9B742C89D096000719D9 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 				F19B76D62C89DEE40048FF42 /* XCRemoteSwiftPackageReference "needle" */,
+				F100D1A52C90C0D3008274A4 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */,
 			);
 			productRefGroup = F1EE9B2F2C89C079000719D9 /* Products */;
 			projectDirPath = "";
@@ -358,6 +362,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		F100D1A52C90C0D3008274A4 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/google/GoogleSignIn-iOS";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 8.0.0;
+			};
+		};
 		F19B76D62C89DEE40048FF42 /* XCRemoteSwiftPackageReference "needle" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/uber/needle.git";
@@ -377,6 +389,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		F100D1A62C90C0D3008274A4 /* GoogleSignInSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = F100D1A52C90C0D3008274A4 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */;
+			productName = GoogleSignInSwift;
+		};
 		F19B76D72C89DEE40048FF42 /* NeedleFoundation */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = F19B76D62C89DEE40048FF42 /* XCRemoteSwiftPackageReference "needle" */;

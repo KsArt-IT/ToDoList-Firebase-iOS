@@ -7,6 +7,7 @@
 
 import UIKit
 import Combine
+import GoogleSignIn
 
 class LoginViewController: BaseViewController {
     private let screen = LoginViewScreen()
@@ -76,5 +77,19 @@ class LoginViewController: BaseViewController {
         viewModel.isLoginButtonEnabled
             .assign(to: \.isLoginButtonEnabled, on: screen)
             .store(in: &cancellables)
+
+        viewModel.$loginGoogle
+            .sink { [weak self] login in
+                guard login, let self else { return }
+                GIDSignIn.sharedInstance.signIn( withPresenting: self) { [unowned self] result, error in
+                    guard error == nil else {
+//                        self.showAlertOk(title: R.Strings.titleError, message: error?.localizedDescription)
+                        return
+                    }
+
+                    self.viewModel.submitLogin(with: result)
+                }
+            }.store(in: &cancellables)
+
     }
 }

@@ -7,6 +7,9 @@
 
 import Foundation
 import Combine
+import FirebaseCore
+import FirebaseAuth
+import GoogleSignIn
 
 class LoginViewModel: TaskViewModel {
 
@@ -16,6 +19,7 @@ class LoginViewModel: TaskViewModel {
     @Published var email = ""
     @Published var password = ""
     @Published var viewStates: ViewStates = .none
+    @Published var loginGoogle = false
 
     var isValidEmailPublisher: AnyPublisher<Bool, Never> {
         $email.map {
@@ -72,16 +76,66 @@ class LoginViewModel: TaskViewModel {
         }
     }
 
+    public func submitLogin(with signInResult: GIDSignInResult?) {
+        guard let user = signInResult?.user, let idToken = user.idToken?.tokenString else { return }
+
+        launch { [weak self] in
+            let result = await self?.repository.signIn(withIDToken: idToken, accessToken: user.accessToken.tokenString)
+            switch result {
+                case .success(_):
+                    // успешная авторизация, перейти на основной экран
+                    self?.toMain()
+                case .failure(let error):
+                    self?.showError(error: error)
+                case .none:
+                    break
+            }
+        }
+    }
+
+    private func showError(error: Error) {
+        guard let error = error as? NetworkServiceError else { return }
+
+        self.viewStates = switch error {
+            case .invalidRequest, .invalidResponse,
+                    .statusCode(_, _), .decodingError(_), .networkError(_),
+                    .invalidCredential, .userNotFound, .userDisabled:
+                    .failure(error: .alert, message: error.localizedDescription)
+            case .invalidEmail, .emailAlreadyInUse:
+                    .failure(error: .email, message: error.localizedDescription)
+            case .wrongPassword, .weakPassword:
+                    .failure(error: .password, message: error.localizedDescription)
+            case .cancelled:
+                    .none
+        }
+
+    }
+
     public func toLoginGoogle() {
-        coordinator?.navigation(to: .loginGoogle)
+        guard let clientID = FirebaseApp.app()?.options.clientID else { return }
+        
+        // Create Google Sign In configuration object.
+        let config = GIDConfiguration(clientID: clientID)
+        GIDSignIn.sharedInstance.configuration = config
+
+        loginGoogle = true
     }
 
     public func toRegistration() {
-        coordinator?.navigation(to: .registration)
+        navigate(to: .registration)
     }
 
     public func toResetPassword() {
-        coordinator?.navigation(to: .resetPassword)
+        navigate(to: .resetPassword)
     }
 
+    public func toMain() {
+        navigate(to: .main)
+    }
+
+    private func navigate(to screen: Route) {
+        DispatchQueue.main.async { [weak self] in
+            self?.coordinator?.navigation(to: screen)
+        }
+    }
 }

@@ -7,6 +7,7 @@
 
 import Foundation
 import FirebaseAuth
+import GoogleSignIn
 
 final class FirebaseAuthServiceImpl: AuthService {
 
@@ -86,4 +87,14 @@ final class FirebaseAuthServiceImpl: AuthService {
         }
     }
 
+    func signIn(withIDToken: String, accessToken: String) async -> Result<Bool, Error> {
+        do {
+            let credential = GoogleAuthProvider.credential(withIDToken: withIDToken, accessToken: accessToken)
+            let result = try await Auth.auth().signIn(with: credential)
+            print("Auth result=Ok")
+            return .success(true)
+        } catch {
+            return .failure(NetworkServiceError.networkError(error))
+        }
+    }
 }

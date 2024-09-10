@@ -34,22 +34,23 @@ final class ResetViewModel: TaskViewModel {
             guard let self else { return }
 
             let result = await self.repository.resetPassword(email: self.email)
-            switch result {
-                case .success(_):
-                    // запрос на сброс пароля отправлен
-                    self.viewStates = .failure(error: .password, message: R.Strings.passwordResetRequestSent)
-                case .failure(let error):
-                    guard let error = error as? NetworkServiceError else { return }
+            DispatchQueue.main.async {
+                switch result {
+                    case .success(_):
+                        // запрос на сброс пароля отправлен
+                        self.viewStates = .failure(error: .password, message: R.Strings.passwordResetRequestSent)
+                    case .failure(let error):
+                        guard let error = error as? NetworkServiceError else { return }
 
-                    self.viewStates = switch error {
-                        case .invalidEmail, .emailAlreadyInUse:
-                                .failure(error: .email, message: error.localizedDescription)
-                        case .cancelled:
-                                .none
-                        default:
-                                .failure(error: .alert, message: error.localizedDescription)
-                    }
-
+                        self.viewStates = switch error {
+                            case .invalidEmail, .emailAlreadyInUse:
+                                    .failure(error: .email, message: error.localizedDescription)
+                            case .cancelled:
+                                    .none
+                            default:
+                                    .failure(error: .alert, message: error.localizedDescription)
+                        }
+                }
             }
         }
     }

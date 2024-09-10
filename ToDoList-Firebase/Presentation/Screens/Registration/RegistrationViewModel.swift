@@ -61,7 +61,6 @@ final class RegistrationViewModel: TaskViewModel {
             let result = await self.repository.signUp(email: self.email, password: self.password)
             DispatchQueue.main.async {
                 switch result {
-
                     case .success(_):
                         // успешная регистрация, перейти на экран логина
                         self.coordinator?.navigation(to: .back)
@@ -80,7 +79,6 @@ final class RegistrationViewModel: TaskViewModel {
                             case .cancelled:
                                     .none
                         }
-
                 }
             }
         }

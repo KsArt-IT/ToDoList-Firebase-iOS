@@ -11,6 +11,17 @@ import Combine
 
 class RegistrationViewScreen: BaseView {
 
+    private let logo: UIImageView = {
+        let view = UIImageView()
+        view.image = UIImage(named: "LoginLogo")
+        view.contentMode = .scaleAspectFit
+        view.layer.borderWidth = 1
+        view.layer.borderColor = UIColor.red.cgColor
+        view.layer.masksToBounds = false
+        view.layer.cornerRadius = Constants.sizeLogo / 2
+        view.clipsToBounds = true
+        return view
+    }()
     private let loginTextField: TextFieldView = {
         let view = TextFieldView()
         view.keyboardType = .emailAddress
@@ -94,6 +105,7 @@ extension RegistrationViewScreen {
 
     override func configureViews() {
         super.configureViews()
+        addSubview(logo)
         addSubview(loginTextField)
         addSubview(passwordTextField)
         addSubview(passwordConfirmTextField)
@@ -105,14 +117,20 @@ extension RegistrationViewScreen {
     override func configureConstraints() {
         super.configureConstraints()
 
+        logo.translatesAutoresizingMaskIntoConstraints = false
         loginTextField.translatesAutoresizingMaskIntoConstraints = false
         passwordTextField.translatesAutoresizingMaskIntoConstraints = false
         passwordConfirmTextField.translatesAutoresizingMaskIntoConstraints = false
         registrationButton.translatesAutoresizingMaskIntoConstraints = false
 
         NSLayoutConstraint.activate([
+            logo.centerXAnchor.constraint(equalTo: self.centerXAnchor),
+            logo.topAnchor.constraint(equalTo: self.topAnchor, constant: Constants.medium),
+            logo.widthAnchor.constraint(equalToConstant: Constants.sizeLogo),
+            logo.heightAnchor.constraint(equalToConstant: Constants.sizeLogo),
+
             loginTextField.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: Constants.medium),
-            loginTextField.topAnchor.constraint(equalTo: self.topAnchor, constant: Constants.medium),
+            loginTextField.topAnchor.constraint(equalTo: logo.bottomAnchor, constant: Constants.medium),
             loginTextField.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -Constants.medium),
 
             passwordTextField.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: Constants.medium),

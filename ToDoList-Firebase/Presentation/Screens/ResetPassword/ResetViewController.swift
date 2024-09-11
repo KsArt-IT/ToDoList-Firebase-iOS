@@ -28,6 +28,7 @@ final class ResetViewController: BaseViewController {
         addScreen(screen: screen)
 
         super.configureViews()
+        title = R.Strings.titleReset
     }
 
     override func binding() {

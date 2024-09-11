@@ -28,6 +28,7 @@ final class RegistrationViewController: BaseViewController {
         addScreen(screen: screen)
 
         super.configureViews()
+        title = R.Strings.titleRegistration
     }
 
     override func binding() {

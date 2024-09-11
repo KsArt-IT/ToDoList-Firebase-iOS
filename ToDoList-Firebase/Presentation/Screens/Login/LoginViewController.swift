@@ -29,10 +29,7 @@ class LoginViewController: BaseViewController {
         addScreen(screen: screen)
 
         super.configureViews()
-    }
-
-    override func configureAppearance() {
-        super.configureAppearance()
+        title = R.Strings.titleLogin
     }
 
     override func binding() {

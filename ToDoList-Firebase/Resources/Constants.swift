@@ -14,4 +14,6 @@ enum Constants {
 
     static let cornerRadius: CGFloat = 10
     static let borderWidth: CGFloat = 1
+
+    static let sizeLogo: CGFloat = 100
 }

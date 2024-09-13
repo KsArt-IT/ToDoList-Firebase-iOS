@@ -23,9 +23,11 @@ enum R {
 
         // buttons
         static let loginButton = String(localized: "Login")
+        static let logoutButton = String(localized: "Logout")
         static let loginGoogleButton = String(localized: "loginGoogle")
         static let registrationButton = String(localized: "registrationButton")
         static let resetButton = String(localized: "resetButton")
+        static let addToDoButton = String(localized: "addToDoButton")
 
         // auth errors
         static let userNotFound = String(localized: "userNotFound")

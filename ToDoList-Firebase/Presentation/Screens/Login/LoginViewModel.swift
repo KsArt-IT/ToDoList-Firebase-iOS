@@ -152,6 +152,10 @@ class LoginViewModel: TaskViewModel {
 
     }
 
+    deinit {
+        print("LoginViewModel.deinit")
+    }
+
     // MARK: - Navigation
     public func toRegistration() {
         navigate(to: .registration)

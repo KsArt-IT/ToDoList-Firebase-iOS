@@ -97,4 +97,9 @@ class LoginViewController: BaseViewController {
             self.viewModel.submitLogin(idToken: idToken, accessToken: user.accessToken.tokenString)
         }
     }
+
+    deinit {
+        print("LoginViewController.deinit")
+    }
+
 }

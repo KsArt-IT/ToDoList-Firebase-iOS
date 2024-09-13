@@ -33,8 +33,17 @@ final class MainViewModel: TaskViewModel {
 
     }
 
+    public func logout() {
+        UserData.shared.isNeedLogout = true
+        toLogin()
+    }
+
+    deinit {
+        print("MainViewModel.deinit")
+    }
+
     // MARK: - Navigate
-    public func toLogin() {
+    private func toLogin() {
         navigate(to: .login)
     }
 

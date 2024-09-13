@@ -9,7 +9,6 @@ import Foundation
 import Combine
 import FirebaseCore
 import FirebaseAuth
-import GoogleSignIn
 
 class LoginViewModel: TaskViewModel {
 
@@ -19,7 +18,7 @@ class LoginViewModel: TaskViewModel {
     @Published var email = ""
     @Published var password = ""
     @Published var viewStates: ViewStates = .none
-    @Published var loginGoogle = false
+    @Published var requestLoginGoogle: String?
 
     var isValidEmailPublisher: AnyPublisher<Bool, Never> {
         $email.map {
@@ -42,6 +41,59 @@ class LoginViewModel: TaskViewModel {
     init(coordinator: Coordinator, repository: AuthRepository) {
         self.coordinator = coordinator
         self.repository = repository
+        super.init()
+        
+        self.checkAuthorization()
+    }
+
+    private func checkAuthorization() {
+        launch { [weak self] in
+            // сначала проверим необходим ли logout
+            if UserData.shared.isNeedLogout {
+                await self?.logout()
+            } else {
+                // проверить авторизацию
+                UserData.shared.user = await self?.getAuthUser()
+            }
+            // перейдем на главный экран
+            if UserData.shared.user != nil {
+                self?.toMain()
+            }
+        }
+    }
+
+    private func logout() async {
+        let result = await repository.logout()
+        // проверить на ошибки сети
+        switch result {
+            case .success(_):
+                UserData.shared.user = nil
+            case .failure(let error):
+                guard let networkError = error as? NetworkServiceError else { return }
+                switch networkError {
+                    case .cancelled: break
+                    default:
+                        // ошибки сети необходимо вывести алерт
+                        print(networkError.localizedDescription)
+                }
+        }
+    }
+
+    private func getAuthUser() async -> UserAuth? {
+        let result = await repository.fetchAuthUser()
+        switch result {
+            case .success(let user):
+                return user
+            case .failure(let error):
+                guard let networkError = error as? NetworkServiceError else { return nil }
+                switch networkError {
+                    case .cancelled: return nil
+                    default:
+                        // ошибки сети необходимо вывести алерт
+                        print(networkError.localizedDescription)
+                }
+                return nil
+        }
     }
 
     public func submitLogin() {
@@ -51,36 +103,25 @@ class LoginViewModel: TaskViewModel {
             guard let self else { return }
 
             let result = await self.repository.signIn(email: self.email, password: self.password)
-            DispatchQueue.main.async {
-                switch result {
-                    case .success(_):
-                        // успешная авторизация, перейти на основной экран
-                        self.coordinator?.navigation(to: .main)
-                    case .failure(let error):
-                        guard let error = error as? NetworkServiceError else { return }
-
-                        self.viewStates = switch error {
-                            case .invalidRequest, .invalidResponse,
-                                    .statusCode(_, _), .decodingError(_), .networkError(_),
-                                    .invalidCredential, .userNotFound, .userDisabled:
-                                    .failure(error: .alert, message: error.localizedDescription)
-                            case .invalidEmail, .emailAlreadyInUse:
-                                    .failure(error: .email, message: error.localizedDescription)
-                            case .wrongPassword, .weakPassword:
-                                    .failure(error: .password, message: error.localizedDescription)
-                            case .cancelled:
-                                    .none
-                        }
-                }
+            switch result {
+                case .success(_):
+                    // успешная авторизация, перейти на основной экран
+                    self.toMain()
+                case .failure(let error):
+                    self.showError(error: error)
             }
         }
     }
 
-    public func submitLogin(with signInResult: GIDSignInResult?) {
-        guard let user = signInResult?.user, let idToken = user.idToken?.tokenString else { return }
+    public func toLoginGoogle() {
+        guard let clientID = FirebaseApp.app()?.options.clientID else { return }
 
+        requestLoginGoogle = clientID
+    }
+
+    public func submitLogin(idToken: String, accessToken: String) {
         launch { [weak self] in
-            let result = await self?.repository.signIn(withIDToken: idToken, accessToken: user.accessToken.tokenString)
+            let result = await self?.repository.signIn(withIDToken: idToken, accessToken: accessToken)
             switch result {
                 case .success(_):
                     // успешная авторизация, перейти на основной экран
@@ -111,16 +152,7 @@ class LoginViewModel: TaskViewModel {
 
     }
 
-    public func toLoginGoogle() {
-        guard let clientID = FirebaseApp.app()?.options.clientID else { return }
-        
-        // Create Google Sign In configuration object.
-        let config = GIDConfiguration(clientID: clientID)
-        GIDSignIn.sharedInstance.configuration = config
-
-        loginGoogle = true
-    }
-
+    // MARK: - Navigation
     public func toRegistration() {
         navigate(to: .registration)
     }

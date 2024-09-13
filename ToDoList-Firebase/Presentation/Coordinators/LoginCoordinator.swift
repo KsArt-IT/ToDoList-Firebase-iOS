@@ -11,12 +11,18 @@ final class LoginCoordinator: BaseCoordinator {
 
     override func navigation(to route: Route) {
         switch route {
+            case .main: startMainFlow()
             case .start: startLoginFlow()
             case .registration: startRegistrationFlow()
             case .resetPassword: startResetPasswordFlow()
             case .back: navController?.popViewController(animated: true)
             default: break
         }
+    }
+
+    private func startMainFlow() {
+        parentCoordinator?.navigation(to: .main)
+        finish()
     }
 
     private func startLoginFlow() {

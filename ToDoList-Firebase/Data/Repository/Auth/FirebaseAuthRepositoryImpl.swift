@@ -15,6 +15,14 @@ final class FirebaseAuthRepositoryImpl: AuthRepository {
         self.service = service
     }
 
+    func logout() async -> Result<Bool, Error> {
+        await service.logout()
+    }
+
+    func fetchAuthUser() async -> Result<UserAuth, Error> {
+        await service.fetchAuthUser()
+    }
+
     func signIn(email: String, password: String) async -> Result<Bool, Error> {
         await service.signIn(email: email, password: password)
     }

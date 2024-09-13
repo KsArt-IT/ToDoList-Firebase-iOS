@@ -11,6 +11,48 @@ import GoogleSignIn
 
 final class FirebaseAuthServiceImpl: AuthService {
 
+    func logout() async -> Result<Bool, Error> {
+        do {
+            try Auth.auth().signOut()
+            return .success(true)
+        } catch {
+            return .failure(NetworkServiceError.networkError(error))
+        }
+    }
+
+    func fetchAuthUser() async -> Result<UserAuth, Error> {
+        do {
+            guard let user = Auth.auth().currentUser else {
+                return .failure(NetworkServiceError.cancelled)
+            }
+            let token = try await user.getIDToken()
+            let photo: Data? = await getPhoto(url: user.photoURL)
+            let userAuth = UserAuth(
+                id: user.uid,
+                token: token,
+                name: user.displayName ?? "No name",
+                email: user.email ?? "No Email",
+                photo: photo
+            )
+            return .success(userAuth)
+        } catch {
+            return .failure(NetworkServiceError.networkError(error))
+        }
+    }
+
+    private func getPhoto(url: URL?) async -> Data? {
+        guard let url else { return nil }
+        do {
+            let (data, response) = try await URLSession.shared.data(from: url)
+            guard let httpResponse = response as? HTTPURLResponse, 200...299 ~= httpResponse.statusCode else {
+                return nil
+            }
+            return data
+        } catch {
+            return nil
+        }
+    }
+
     func signIn(email: String, password: String) async -> Result<Bool, Error>{
 
         do {
@@ -87,11 +129,13 @@ final class FirebaseAuthServiceImpl: AuthService {
         }
     }
 
+    // вход через google аккаунт
     func signIn(withIDToken: String, accessToken: String) async -> Result<Bool, Error> {
         do {
             let credential = GoogleAuthProvider.credential(withIDToken: withIDToken, accessToken: accessToken)
             let result = try await Auth.auth().signIn(with: credential)
-            print("Auth result=Ok")
+            let user = result.user
+            print("Auth result=Ok, user=\(user)")
             return .success(true)
         } catch {
             return .failure(NetworkServiceError.networkError(error))

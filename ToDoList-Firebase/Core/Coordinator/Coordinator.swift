@@ -41,7 +41,7 @@ enum Route {
     case start
     case main
     case back
-    case loginGoogle
+    case login
     case registration
     case resetPassword
     case detail(id: Int)

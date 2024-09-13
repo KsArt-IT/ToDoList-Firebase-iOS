@@ -19,6 +19,18 @@ class RootComponent: BootstrapComponent {
         shared { FirebaseAuthRepositoryImpl(service: authNetworkService) }
     }
 
+    private var dataNetworkService: DataService {
+        shared { FirebaseDataServiceImpl() }
+    }
+
+    public var dataRepository: DataRepository {
+        shared { FirebaseDataRepositoryImpl(service: dataNetworkService) }
+    }
+
+    var mainComponent: MainComponent {
+        MainComponent(parent: self)
+    }
+
     var loginComponent: LoginComponent {
         LoginComponent(parent: self)
     }

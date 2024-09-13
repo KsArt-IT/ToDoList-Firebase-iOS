@@ -12,13 +12,6 @@ final class MainViewController: BaseViewController {
     private let screen = MainViewScreen()
     private let viewModel: MainViewModel
 
-    private let logoutButton: UIButton = {
-        let button = UIButton(type: .close)
-        button.titleLabel?.text = R.Strings.logoutButton
-        button.titleLabel?.textColor = .black
-        return button
-    }()
-
     private let addButton: UIButton = {
         let button = UIButton(type: .contactAdd)
         button.titleLabel?.text = R.Strings.addToDoButton
@@ -44,8 +37,20 @@ final class MainViewController: BaseViewController {
         super.configureViews()
         title = R.Strings.titleMain
 
-        logoutButton.addTarget(self, action: #selector(logout), for: .touchUpInside)
-        navigationItem.rightBarButtonItem = UIBarButtonItem(customView: logoutButton)
+        let menu = UIMenu(
+            title: "",
+            children: [
+                UIAction( title: R.Strings.logoutButton, image: UIImage(systemName: "xmark.circle")) { [weak self] _ in
+                    self?.viewModel.logout()
+                },
+            ]
+        )
+        let menuBarButton = UIBarButtonItem(
+            image: UIImage(systemName: "ellipsis"),
+            menu: menu
+        )
+
+        navigationItem.rightBarButtonItem = menuBarButton
 
         addButton.addTarget(self, action: #selector(addTask), for: .touchUpInside)
         navigationItem.rightBarButtonItems?.append(UIBarButtonItem(customView: addButton))
@@ -55,7 +60,7 @@ final class MainViewController: BaseViewController {
     }
 
     @objc private func addTask() {
-//        viewModel.logout()
+        
     }
 
     @objc private func logout() {

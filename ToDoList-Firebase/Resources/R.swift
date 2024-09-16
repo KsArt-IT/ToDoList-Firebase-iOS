@@ -29,6 +29,13 @@ enum R {
         static let resetButton = String(localized: "resetButton")
         static let addToDoButton = String(localized: "addToDoButton")
 
+        // actions
+        static let deleteAction = String(localized: "deleteButton")
+        static let forTomorrowAction = String(localized: "forTomorrowButton")
+        static let renameAction = String(localized: "renameButton")
+        static let okAction = String(localized: "okAction")
+        static let cancelAction = String(localized: "cancelAction")
+
         // auth errors
         static let userNotFound = String(localized: "userNotFound")
         static let userDisabled = String(localized: "userDisabled")
@@ -49,5 +56,10 @@ enum R {
         static let titleLogin = String(localized: "titleLogin")
         static let titleRegistration = String(localized: "titleRegistration")
         static let titleReset = String(localized: "titleReset")
+
+        // todo
+        static let titleToDo = String(localized: "titleToDo")
+        static let placeholderTitle = String(localized: "placeholderTitle")
+        static let placeholderNote = String(localized: "placeholderNote")
     }
 }

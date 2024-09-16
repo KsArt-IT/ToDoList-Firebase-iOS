@@ -9,8 +9,15 @@ import Foundation
 
 final class MainViewModel: TaskViewModel {
 
+    @Published var viewState: ViewStates = .none
+
     private weak var coordinator: Coordinator?
     private let repository: DataRepository
+
+    private var list: [ToDoItem] = []
+    public var count: Int {
+        list.count
+    }
 
     init(coordinator: Coordinator, repository: DataRepository) {
         self.coordinator = coordinator
@@ -30,7 +37,70 @@ final class MainViewModel: TaskViewModel {
     }
 
     private func loadData() {
+        viewState = .loading
+        DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(3)) { [weak self] in
+            self?.list = ToDoList.shared.list
+            self?.viewState = .success
+        }
+    }
 
+    public func getItem(at index: Int) -> ToDoItem? {
+        guard insideOfList(index) else { return nil }
+
+        return list[index]
+    }
+
+    public func add(title: String, text: String) {
+        list.append(
+            ToDoItem(
+                id: UUID().uuidString,
+                date: Date().addingTimeInterval(Constants.dayInterval),
+                title: title,
+                text: text,
+                isCompleted: false)
+        )
+    }
+
+    public func rename(at index: Int, title: String, text: String) {
+        guard insideOfList(index) else { return }
+
+        change(at: index, title: title)
+    }
+
+    public func remove(at index: Int) {
+        guard insideOfList(index) else { return }
+
+        list.remove(at: index)
+    }
+
+    public func forTomorrow(at index: Int) {
+        guard insideOfList(index) else { return }
+
+        var date = list[index].date
+        // добавим сутки 24 * 3600
+        date.addTimeInterval(Constants.dayInterval)
+        change(at: index, date: date)
+    }
+
+    func toggle(at index: Int) {
+        guard insideOfList(index) else { return }
+
+        change(at: index, isCompleted: !list[index].isCompleted)
+    }
+
+    private func change(at index: Int, title: String? = nil, text: String? = nil, date: Date? = nil, isCompleted: Bool? = nil) {
+        let oldItem = list[index]
+        list[index] = ToDoItem(
+            id: oldItem.id,
+            date: date ?? oldItem.date,
+            title: title ?? oldItem.title,
+            text: text ?? oldItem.text,
+            isCompleted: isCompleted ?? oldItem.isCompleted
+        )
+    }
+
+    private func insideOfList(_ index: Int) -> Bool {
+        0..<list.endIndex ~= index
     }
 
     public func logout() {

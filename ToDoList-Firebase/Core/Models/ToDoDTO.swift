@@ -2,12 +2,13 @@
 //  ToDoItem.swift
 //  ToDoList-Firebase
 //
-//  Created by KsArT on 16.09.2024.
+//  Created by KsArT on 17.09.2024.
 //
+
 
 import Foundation
 
-struct ToDoItem {
+struct ToDoDTO: Identifiable, Codable {
     let id: String
     let date: Date
     let title: String
@@ -15,9 +16,9 @@ struct ToDoItem {
     let isCompleted: Bool
 }
 
-extension ToDoItem {
-    func mapToDto() -> ToDoDTO {
-        ToDoDTO(
+extension ToDoDTO {
+    func mapToItem() -> ToDoItem {
+        ToDoItem(
             id: self.id,
             date: self.date,
             title: self.title,

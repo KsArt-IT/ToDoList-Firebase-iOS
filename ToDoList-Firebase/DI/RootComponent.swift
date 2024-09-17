@@ -31,6 +31,10 @@ class RootComponent: BootstrapComponent {
         MainComponent(parent: self)
     }
 
+    var createComponent: CreateComponent {
+        CreateComponent(parent: self)
+    }
+
     var loginComponent: LoginComponent {
         LoginComponent(parent: self)
     }

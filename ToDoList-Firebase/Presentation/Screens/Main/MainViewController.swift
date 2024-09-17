@@ -20,12 +20,6 @@ final class MainViewController: BaseViewController {
         return button
     }()
 
-    private let loader: UIActivityIndicatorView = {
-        let view = UIActivityIndicatorView()
-        view.hidesWhenStopped = true
-        return view
-    }()
-
     init(viewModel: MainViewModel) {
         self.viewModel = viewModel
 
@@ -34,10 +28,6 @@ final class MainViewController: BaseViewController {
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
-    }
-
-    private func showLoader(_ show: Bool = true) {
-        show ? loader.startAnimating() : loader.stopAnimating()
     }
 
     deinit {
@@ -55,7 +45,6 @@ extension MainViewController {
         title = R.Strings.titleMain
 
         screen.configureSource(dataSource: self, delegate: self)
-        view.addSubview(loader)
 
         // добавляем меню для logout
         let menu = UIMenu(
@@ -78,17 +67,6 @@ extension MainViewController {
         navigationItem.rightBarButtonItems?.append(UIBarButtonItem(customView: addButton))
     }
 
-    override func configureConstraints() {
-        super.configureConstraints()
-
-        loader.translatesAutoresizingMaskIntoConstraints = false
-
-        NSLayoutConstraint.activate([
-            loader.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            loader.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-        ])
-    }
-
     override func binding() {
         viewModel.$viewState.receive(on: DispatchQueue.main).sink { [weak self] state in
             self?.showLoader(false)
@@ -102,14 +80,14 @@ extension MainViewController {
                     self?.showLoader()
                 case .none:
                     break
+                case .edit(_):
+                    break
             }
         }.store(in: &cancellables)
     }
 
     @objc private func addTask() {
-        TextPicker().show(in: self) { [weak self] title, text in
-            self?.viewModel.add(title: title, text: text)
-        }
+        viewModel.add()
     }
 
     @objc private func logout() {
@@ -122,12 +100,12 @@ extension MainViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         self.viewModel.count
     }
-    
+
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: ToDoCell.indentifier, for: indexPath) as? ToDoCell else { return UITableViewCell() }
 
         guard let item = viewModel.getItem(at: indexPath.row) else { fatalError("index not in 0..<\(viewModel.count)")}
-        
+
         cell.configure(item: item)
 
         return cell
@@ -146,17 +124,10 @@ extension MainViewController: UITableViewDelegate {
 
         // 2 кнопки действий
         let actionRename = UIContextualAction(style: .normal, title: R.Strings.renameAction) { [weak self] _, _, completed in
-            guard let self, let item = self.viewModel.getItem(at: indexPath.row) else { return }
 
-            TextPicker().show(in: self, title: item.title, text: item.text) {
-                // скрыть кнопку после
-                completed(true)
-            } complition: { [weak self] title, text in
-                self?.viewModel.rename(at: indexPath.row, title: title, text: text)
-
-                // обновить строку
-               tableView.reloadRows(at: [indexPath], with: .automatic)
-            }
+            self?.viewModel.edit(at: indexPath.row)
+            // скрыть кнопку после
+            completed(true)
         }
         // цвет фона
         actionRename.backgroundColor = .magenta

@@ -13,6 +13,8 @@ final class MainCoordinator: BaseCoordinator {
         switch route {
             case .start: startMainFlow()
             case .login: startLoginFlow()
+            case .edit(let item): startCreateFlow(item: item)
+            case .back: toBack()
             default: break
         }
     }
@@ -22,9 +24,18 @@ final class MainCoordinator: BaseCoordinator {
         navController?.pushViewController(vc, animated: true)
     }
 
+    private func startCreateFlow(item: ToDoItem?) {
+        let vc = component.createComponent.viewController(coordinator: self, item: item)
+        navController?.present(vc, animated: true)
+    }
+
     private func startLoginFlow() {
         parentCoordinator?.navigation(to: .login)
         finish()
+    }
+
+    private func toBack() {
+        navController?.popViewController(animated: true)
     }
 
     deinit {

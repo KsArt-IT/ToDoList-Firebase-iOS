@@ -68,6 +68,8 @@ class LoginViewController: BaseViewController {
                         break
                     case .none:
                         break
+                    case .edit(_):
+                        break
                 }
             }.store(in: &cancellables)
 

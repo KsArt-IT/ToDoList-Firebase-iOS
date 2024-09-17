@@ -28,6 +28,7 @@ enum R {
         static let registrationButton = String(localized: "registrationButton")
         static let resetButton = String(localized: "resetButton")
         static let addToDoButton = String(localized: "addToDoButton")
+        static let createButton = String(localized: "createButton")
 
         // actions
         static let deleteAction = String(localized: "deleteButton")
@@ -56,6 +57,7 @@ enum R {
         static let titleLogin = String(localized: "titleLogin")
         static let titleRegistration = String(localized: "titleRegistration")
         static let titleReset = String(localized: "titleReset")
+        static let titleCreate = String(localized: "titleCreate")
 
         // todo
         static let titleToDo = String(localized: "titleToDo")

@@ -45,4 +45,5 @@ enum Route {
     case registration
     case resetPassword
     case detail(id: Int)
+    case edit(item: ToDoItem? = nil)
 }

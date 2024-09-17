@@ -11,6 +11,7 @@ import Foundation
 enum NetworkServiceError: Error {
     case invalidRequest
     case invalidResponse
+    case invalidDatabase
     case statusCode(code: Int, message: String)
     case decodingError(DecodingError)
     case networkError(Error)
@@ -32,6 +33,8 @@ enum NetworkServiceError: Error {
                 "The request is invalid."
             case .invalidResponse:
                 "The response is invalid."
+            case .invalidDatabase:
+                "Database is not connected."
             case .statusCode(let code, let message):
                 "Unexpected status code: \(code). \(message)"
             case .decodingError(let error):

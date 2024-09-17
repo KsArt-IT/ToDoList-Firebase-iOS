@@ -39,9 +39,16 @@ final class MainViewModel: TaskViewModel {
     private func loadData() {
         viewState = .loading
         DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(3)) { [weak self] in
-            self?.list = ToDoList.shared.list
+            // TODO: загрузка данных
+            self?.list = []
             self?.viewState = .success
         }
+    }
+
+    public func edit(at index: Int) {
+        guard insideOfList(index) else { return }
+
+        toEdit(item: list[index])
     }
 
     public func getItem(at index: Int) -> ToDoItem? {
@@ -50,15 +57,8 @@ final class MainViewModel: TaskViewModel {
         return list[index]
     }
 
-    public func add(title: String, text: String) {
-        list.append(
-            ToDoItem(
-                id: UUID().uuidString,
-                date: Date().addingTimeInterval(Constants.dayInterval),
-                title: title,
-                text: text,
-                isCompleted: false)
-        )
+    public func add() {
+        toAdd()
     }
 
     public func rename(at index: Int, title: String, text: String) {
@@ -115,6 +115,14 @@ final class MainViewModel: TaskViewModel {
     // MARK: - Navigate
     private func toLogin() {
         navigate(to: .login)
+    }
+
+    private func toAdd() {
+        navigate(to: .edit())
+    }
+
+    private func toEdit(item: ToDoItem) {
+        navigate(to: .edit(item: item))
     }
 
     private func navigate(to screen: Route) {

@@ -66,6 +66,8 @@ final class RegistrationViewController: BaseViewController {
                         break
                     case .none:
                         break
+                    case .edit(_):
+                        break
                 }
             }.store(in: &cancellables)
 

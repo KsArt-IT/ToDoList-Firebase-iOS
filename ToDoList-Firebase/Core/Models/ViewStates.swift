@@ -16,6 +16,7 @@ enum ViewStates {
         case alert
     }
     case success
+    case edit(item: ToDoItem)
     case failure(error: Errors, message: String)
     case loading
     case none

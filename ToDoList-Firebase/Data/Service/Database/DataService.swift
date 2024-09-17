@@ -8,5 +8,5 @@
 import Foundation
 
 protocol DataService {
-
+    func saveToDo(_ todo: ToDoDTO) async -> Result<Bool, Error>
 }

@@ -68,7 +68,7 @@ final class RegistrationViewModel: TaskViewModel {
                         guard let error = error as? NetworkServiceError else { return }
 
                         self.viewStates = switch error {
-                            case .invalidRequest, .invalidResponse,
+                            case .invalidRequest, .invalidResponse, .invalidDatabase,
                                     .statusCode(_, _), .decodingError(_), .networkError(_),
                                     .invalidCredential, .userNotFound, .userDisabled:
                                     .failure(error: .alert, message: error.localizedDescription)

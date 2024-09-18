@@ -24,4 +24,6 @@ enum Constants {
     // секунд в дне
     static let dayInterval: TimeInterval = 86400
     static let hourInterval: TimeInterval = 86400
+
+    
 }

@@ -15,7 +15,7 @@ final class FirebaseDataRepositoryImpl: DataRepository {
         self.service = service
     }
 
-    public func saveToDo(_ todo: ToDoItem) async -> Result<Bool, Error> {
-        await service.saveToDo(todo.mapToDto())
+    public func saveData(todo: ToDoItem) async -> Result<Bool, Error> {
+        await service.saveData(todo: todo.mapToDto())
     }
 }

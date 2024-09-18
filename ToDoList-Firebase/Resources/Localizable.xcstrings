@@ -695,6 +695,29 @@
         }
       }
     },
+    "todoFillFields" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fill in the fields with the title and text of your task!"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Заполните поля название и текст своего задания!"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Заповніть поля назву та текст свого завдання!"
+          }
+        }
+      }
+    },
     "userDisabled" : {
       "extractionState" : "manual",
       "localizations" : {

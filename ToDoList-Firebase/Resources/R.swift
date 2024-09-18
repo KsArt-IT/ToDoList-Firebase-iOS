@@ -51,6 +51,7 @@ enum R {
         // alert
         static let titleError = String(localized: "Error")
         static let passwordResetRequestSent = String(localized: "passwordResetRequestSent")
+        static let todoFillFields = String(localized: "todoFillFields")
 
         // title screen
         static let titleMain = String(localized: "titleMain")

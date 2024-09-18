@@ -26,7 +26,10 @@ final class CreateViewModel: TaskViewModel {
     }
 
     public func create() {
-        guard !title.isEmpty, !text.isEmpty else { return }
+        guard !title.isEmpty, !text.isEmpty else {
+            viewState = .failure(error: .alert, message: R.Strings.todoFillFields)
+            return
+        }
 
         let todo = ToDoItem(
             id: UUID().uuidString,
@@ -36,14 +39,18 @@ final class CreateViewModel: TaskViewModel {
             isCompleted: false
         )
         launch { [weak self] in
-            let result = await self?.repository.saveToDo(todo)
+            self?.viewState = .loading
+            let result = await self?.repository.saveData(todo: todo)
             switch result {
                 case .success(_):
+                    // переходим сразу на основной экран, или необходимо уведомить что все ок?
                     self?.toMain()
                 case .failure(let error):
-                    guard let error = error as? NetworkServiceError else { return }
-
-                    self?.viewState = .failure(error: .alert, message: error.localizedDescription)
+                    let message = if let error = error as? NetworkServiceError { error.localizedDescription
+                    } else {
+                        error.localizedDescription
+                    }
+                    self?.viewState = .failure(error: .alert, message: message)
                 case .none:
                     break
             }

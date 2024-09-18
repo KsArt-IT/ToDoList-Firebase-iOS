@@ -8,5 +8,5 @@
 import Foundation
 
 protocol DataRepository {
-    func saveToDo(_ todo: ToDoItem) async -> Result<Bool, Error>
+    func saveData(todo: ToDoItem) async -> Result<Bool, Error>
 }

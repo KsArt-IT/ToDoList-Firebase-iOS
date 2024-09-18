@@ -29,6 +29,10 @@ final class FirebaseDataRepositoryImpl: DataRepository {
         await service.saveData(todo: todo.mapToDto())
     }
 
+    public func deleteData(id: String) async -> Result<Bool, Error> {
+        await service.deleteData(id: id)
+    }
+
     public func addObservers() {
         service.addObservers()
     }

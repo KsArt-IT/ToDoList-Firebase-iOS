@@ -51,6 +51,23 @@ final class FirebaseDataServiceImpl: DataService {
         }
     }
 
+    public func deleteData(id: String) async -> Result<Bool, Error> {
+        guard databasePath != nil else { return .failure(NetworkServiceError.invalidDatabase) }
+        guard let uid = UserData.shared.user?.id else { return .failure(NetworkServiceError.cancelled) }
+
+        do {
+            try await databasePath?
+                .child(DB.Todo.name) // Название БД
+                .child(uid)// uid пользователя, который залогинен
+                .child(id)
+                .removeValue() // удалить по ключу
+
+            return .success(true)
+        } catch {
+            return .failure(NetworkServiceError.networkError(error))
+        }
+    }
+
     private func loadAll() async throws -> [String: Any]? {
         guard let uid = UserData.shared.user?.id else { throw NetworkServiceError.cancelled }
 
@@ -104,7 +121,7 @@ final class FirebaseDataServiceImpl: DataService {
     }
 
     private func addRecord(snapshot: DataSnapshot) {
-        guard var json = snapshot.value as? [String: Any] else { return }
+        guard let json = snapshot.value as? [String: Any] else { return }
         do {
             let records = try decodeData(json)
         } catch {

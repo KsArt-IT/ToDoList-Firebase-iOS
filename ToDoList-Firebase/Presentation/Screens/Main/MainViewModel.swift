@@ -45,17 +45,7 @@ final class MainViewModel: TaskViewModel {
                     self?.list = list
                     self?.viewState = .success
                 case .failure(let error):
-                    let message = if let error = error as? NetworkServiceError {
-                        error.localizedDescription
-                    } else {
-                        error.localizedDescription
-                    }
-                    if !message.isEmpty {
-                        self?.viewState = .failure(error: .alert, message: message)
-                    } else {
-                        // релогин
-                        self?.logout()
-                    }
+                    self?.showError(error: error)
                 case .none:
                     self?.viewState = .none
             }
@@ -87,7 +77,27 @@ final class MainViewModel: TaskViewModel {
     public func remove(at index: Int) {
         guard insideOfList(index) else { return }
 
-        list.remove(at: index)
+        // обновляем только локально, синхронизацию не делаем
+        let item = list.remove(at: index)
+        launch { [weak self] in
+            self?.viewState = .loading
+            let result = await self?.repository.deleteData(id: item.id)
+            switch result {
+                case .success(_):
+                    // удаление в таблице уже произошло, повторно не обновляем
+                    self?.viewState = .none
+                case .failure(let error):
+                    // восстановить элемент и обновить таблицу
+                    DispatchQueue.main.async { [weak self] in
+                        self?.list.append(item)
+                        self?.viewState = .success
+                        // отобразить ошибку
+                        self?.showError(error: error)
+                    }
+                case .none:
+                    self?.viewState = .none
+            }
+        }
     }
 
     public func forTomorrow(at index: Int) {
@@ -114,6 +124,20 @@ final class MainViewModel: TaskViewModel {
             text: text ?? oldItem.text,
             isCompleted: isCompleted ?? oldItem.isCompleted
         )
+    }
+
+    private func showError(error: Error) {
+        let message = if let error = error as? NetworkServiceError {
+            error.localizedDescription
+        } else {
+            error.localizedDescription
+        }
+        if !message.isEmpty {
+            self.viewState = .failure(error: .alert, message: message)
+        } else {
+            // релогин
+            self.logout()
+        }
     }
 
     private func insideOfList(_ index: Int) -> Bool {

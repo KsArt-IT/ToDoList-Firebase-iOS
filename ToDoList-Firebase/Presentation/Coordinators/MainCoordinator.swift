@@ -35,7 +35,7 @@ final class MainCoordinator: BaseCoordinator {
     }
 
     private func toBack() {
-        navController?.popViewController(animated: true)
+        navController?.dismiss(animated: true)
     }
 
     deinit {

@@ -37,11 +37,28 @@ final class MainViewModel: TaskViewModel {
     }
 
     private func loadData() {
-        viewState = .loading
-        DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(3)) { [weak self] in
-            // TODO: загрузка данных
-            self?.list = []
-            self?.viewState = .success
+        launch { [weak self] in
+            self?.viewState = .loading
+            let result = await self?.repository.loadData()
+            switch result {
+                case .success(let list):
+                    self?.list = list
+                    self?.viewState = .success
+                case .failure(let error):
+                    let message = if let error = error as? NetworkServiceError {
+                        error.localizedDescription
+                    } else {
+                        error.localizedDescription
+                    }
+                    if !message.isEmpty {
+                        self?.viewState = .failure(error: .alert, message: message)
+                    } else {
+                        // релогин
+                        self?.logout()
+                    }
+                case .none:
+                    self?.viewState = .none
+            }
         }
     }
 
@@ -106,6 +123,12 @@ final class MainViewModel: TaskViewModel {
     public func logout() {
         UserData.shared.isNeedLogout = true
         toLogin()
+    }
+
+    override func onCleared() {
+        // закрыть все обсерверы DB
+        repository.removeObservers()
+        super.onCleared()
     }
 
     deinit {

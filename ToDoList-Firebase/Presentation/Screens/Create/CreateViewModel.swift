@@ -43,16 +43,23 @@ final class CreateViewModel: TaskViewModel {
             let result = await self?.repository.saveData(todo: todo)
             switch result {
                 case .success(_):
+                    self?.viewState = .success
                     // переходим сразу на основной экран, или необходимо уведомить что все ок?
                     self?.toMain()
                 case .failure(let error):
-                    let message = if let error = error as? NetworkServiceError { error.localizedDescription
+                    let message = if let error = error as? NetworkServiceError {
+                        error.localizedDescription
                     } else {
                         error.localizedDescription
                     }
-                    self?.viewState = .failure(error: .alert, message: message)
+                    if !message.isEmpty {
+                        self?.viewState = .failure(error: .alert, message: message)
+                    } else {
+                        // релогин
+                        self?.toLogin()
+                    }
                 case .none:
-                    break
+                    self?.viewState = .none
             }
         }
     }

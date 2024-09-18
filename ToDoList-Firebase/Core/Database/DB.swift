@@ -9,9 +9,12 @@ import Foundation
 
 enum DB {
     static let url = "https://todolist-firebase-9ecf6-default-rtdb.europe-west1.firebasedatabase.app"
-
-    enum Tables {
-        static let todo = "todo"
-        static let users = "users"
+    
+    enum Todo {
+        static let name = "todo"
+        
+        enum Fields {
+            static let date = "date"
+        }
     }
 }

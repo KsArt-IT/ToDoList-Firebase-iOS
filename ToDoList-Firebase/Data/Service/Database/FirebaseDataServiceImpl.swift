@@ -55,9 +55,11 @@ final class FirebaseDataServiceImpl: DataService {
         guard let uid = UserData.shared.user?.id else { throw NetworkServiceError.cancelled }
 
         let snapshot = try await databasePath?
-            .child(DB.Tables.todo) // Название БД
+            .child(DB.Todo.name) // Название БД
             .child(uid)// uid пользователя, который залогинен
-            .getData()
+            .queryOrdered(byChild: DB.Todo.Fields.date) // отсортировать по
+            .queryLimited(toFirst: 10) // первые данные
+            .getData() // получить данные
         return if let value = snapshot?.value as? [String: Any] {
             value
         } else {
@@ -69,7 +71,7 @@ final class FirebaseDataServiceImpl: DataService {
         guard let uid = UserData.shared.user?.id else { throw NetworkServiceError.cancelled }
         // Записывает словарь в путь к базе данных как дочерний узел с id To-Do
         try await databasePath?
-            .child(DB.Tables.todo) // Название БД
+            .child(DB.Todo.name) // Название БД
             .child(uid)// uid пользователя, который залогинен
             .child(id)// id ToDo или автогенерация .childByAutoId()
             .setValue(json)
@@ -91,13 +93,13 @@ final class FirebaseDataServiceImpl: DataService {
 
     public func removeObservers() {
         databasePath?
-            .child(DB.Tables.todo)
+            .child(DB.Todo.name)
             .removeAllObservers()
     }
 
     public func addObservers() {
         databasePath?
-            .child(DB.Tables.todo)
+            .child(DB.Todo.name)
             .observe(.childAdded, with: addRecord)
     }
 

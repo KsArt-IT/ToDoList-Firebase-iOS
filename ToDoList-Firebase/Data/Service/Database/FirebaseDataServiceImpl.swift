@@ -51,6 +51,19 @@ final class FirebaseDataServiceImpl: DataService {
         }
     }
 
+    public func updateData(todo: ToDoDTO) async -> Result<Bool, Error> {
+        guard databasePath != nil else { return .failure(NetworkServiceError.invalidDatabase) }
+
+        do {
+            let json = try await encodeData(todo)
+            try await update(id: todo.id, json)
+
+            return .success(true)
+        } catch {
+            return .failure(NetworkServiceError.networkError(error))
+        }
+    }
+
     public func deleteData(id: String) async -> Result<Bool, Error> {
         guard databasePath != nil else { return .failure(NetworkServiceError.invalidDatabase) }
         guard let uid = UserData.shared.user?.id else { return .failure(NetworkServiceError.cancelled) }
@@ -92,6 +105,15 @@ final class FirebaseDataServiceImpl: DataService {
             .child(uid)// uid пользователя, который залогинен
             .child(id)// id ToDo или автогенерация .childByAutoId()
             .setValue(json)
+    }
+
+    private func update(id: String, _ json: Any) async throws {
+        guard let uid = UserData.shared.user?.id else { throw NetworkServiceError.cancelled }
+        // Записывает словарь в путь к базе данных как дочерний узел с id To-Do
+        try await databasePath?
+            .child(DB.Todo.name) // Название БД
+            .child(uid)// uid пользователя, который залогинен
+            .updateChildValues([id: json])
     }
 
     private func encodeData(_ todo: ToDoDTO) async throws -> Any {

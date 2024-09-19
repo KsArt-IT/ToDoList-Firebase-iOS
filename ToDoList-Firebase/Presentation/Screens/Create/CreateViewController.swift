@@ -37,7 +37,7 @@ extension CreateViewController {
         super.configureViews()
         title = R.Strings.titleCreate
 
-        screen.onClickButtons(self.viewModel.create)
+        screen.onClickButtons(self.viewModel.save)
     }
 
     override func binding() {

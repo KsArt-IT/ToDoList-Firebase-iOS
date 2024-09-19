@@ -26,13 +26,13 @@ extension ToDoItem {
         )
     }
 
-    func copy(date: Date? = nil, title: String? = nil, text: String? = nil, isCompleted: Bool = false) -> Self {
+    func copy(date: Date? = nil, title: String? = nil, text: String? = nil, isCompleted: Bool? = nil) -> Self {
         ToDoItem(
             id: self.id,
             date: date ?? self.date,
             title: title ?? self.title,
             text: text ?? self.text,
-            isCompleted: isCompleted
+            isCompleted: isCompleted ?? self.isCompleted
         )
     }
 }

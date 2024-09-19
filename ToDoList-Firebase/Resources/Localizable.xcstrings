@@ -53,19 +53,19 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Create"
+            "value" : "Save"
           }
         },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Создать"
+            "value" : "Сохранить"
           }
         },
         "uk" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Створити"
+            "value" : "Зберегти"
           }
         }
       }

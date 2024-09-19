@@ -6,10 +6,12 @@
 //
 
 import Foundation
+import Combine
 
-final class MainViewModel: TaskViewModel {
+final class MainViewModel: TaskViewModel, ObservableObject {
 
     @Published var viewState: ViewStates = .none
+    private var cancellables: Set<AnyCancellable> = []
 
     private weak var coordinator: Coordinator?
     private let repository: DataRepository
@@ -30,25 +32,12 @@ final class MainViewModel: TaskViewModel {
     // проверим пользователь залогинен, если да загрузим данные, иначе переход на экран логина
     private func initialize() {
         if UserData.shared.user != nil {
+            // загружаем данные 1 раз
             self.loadData()
+            // наблюдаем за добавлением и изменением записей
+            self.subscribeData()
         } else {
             self.toLogin()
-        }
-    }
-
-    private func loadData() {
-        launch { [weak self] in
-            self?.viewState = .loading
-            let result = await self?.repository.loadData()
-            switch result {
-                case .success(let list):
-                    self?.list = list
-                    self?.viewState = .success
-                case .failure(let error):
-                    self?.showError(error: error)
-                case .none:
-                    self?.viewState = .none
-            }
         }
     }
 
@@ -109,20 +98,18 @@ final class MainViewModel: TaskViewModel {
         change(at: index, date: date)
     }
 
-    func toggle(at index: Int) {
+    public func toggle(at index: Int) {
         guard insideOfList(index) else { return }
 
         change(at: index, isCompleted: !list[index].isCompleted)
     }
 
     private func change(at index: Int, title: String? = nil, text: String? = nil, date: Date? = nil, isCompleted: Bool? = nil) {
-        let oldItem = list[index]
-        list[index] = ToDoItem(
-            id: oldItem.id,
-            date: date ?? oldItem.date,
-            title: title ?? oldItem.title,
-            text: text ?? oldItem.text,
-            isCompleted: isCompleted ?? oldItem.isCompleted
+        list[index] = list[index].copy(
+            date: date,
+            title: title,
+            text: text,
+            isCompleted: isCompleted
         )
     }
 
@@ -140,6 +127,59 @@ final class MainViewModel: TaskViewModel {
         }
     }
 
+    private func loadData() {
+        launch { [weak self] in
+            self?.viewState = .loading
+            let result = await self?.repository.loadData()
+            switch result {
+                case .success(let list):
+                    self?.sortList(list)
+                case .failure(let error):
+                    self?.showError(error: error)
+                case .none:
+                    self?.viewState = .none
+            }
+        }
+    }
+
+    private func subscribeData() {
+        // для добавления и изменения элементов списка
+        repository.getTodoPublisher()
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] todos in
+                self?.updateList(todos)
+            }
+            .store(in: &cancellables)
+        // для удаления элементов из списка
+        repository.getTodoDelPublisher()
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] todos in
+                self?.deleteFromList(todos)
+            }
+            .store(in: &cancellables)
+    }
+
+    private func updateList(_ newTodos: [ToDoItem]) {
+        var todoDict = Dictionary(uniqueKeysWithValues: list.map { ($0.id, $0) })
+
+        for newTodo in newTodos {
+            todoDict[newTodo.id] = newTodo
+        }
+
+        sortList(Array(todoDict.values))
+    }
+
+    private func deleteFromList(_ todos: [ToDoItem]) {
+        list.removeAll { todo in
+            todos.contains { $0.id == todo.id }
+        }
+    }
+
+    private func sortList(_ newList: [ToDoItem]) {
+        self.list = newList.sorted { $0.date < $1.date }
+        viewState = .success
+    }
+
     private func insideOfList(_ index: Int) -> Bool {
         0..<list.endIndex ~= index
     }
@@ -150,6 +190,8 @@ final class MainViewModel: TaskViewModel {
     }
 
     override func onCleared() {
+        // Отмена всех подписок
+        cancellables.forEach { $0.cancel() }
         // закрыть все обсерверы DB
         repository.removeObservers()
         super.onCleared()

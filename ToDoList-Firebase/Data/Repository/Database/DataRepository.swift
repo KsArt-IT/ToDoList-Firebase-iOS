@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Combine
 
 protocol DataRepository {
     func loadData() async -> Result<[ToDoItem], Error>
@@ -14,4 +15,6 @@ protocol DataRepository {
     func deleteData(id: String) async -> Result<Bool, Error>
     func addObservers()
     func removeObservers()
+    func getTodoPublisher() -> AnyPublisher<[ToDoItem], Never>
+    func getTodoDelPublisher() -> AnyPublisher<[ToDoItem], Never>
 }

@@ -12,6 +12,11 @@ import FirebaseAuth
 import Combine
 
 final class FirebaseDataServiceImpl: DataService {
+    // Паблишер для передачи данных
+    private let todoSubject = PassthroughSubject<[ToDoDTO], Never>()
+    private let todoDelSubject = PassthroughSubject<[ToDoDTO], Never>()
+    private var uidObserve: String?
+
     private let encoder = JSONEncoder()
     private let decoder = JSONDecoder()
 
@@ -131,26 +136,65 @@ final class FirebaseDataServiceImpl: DataService {
     }
 
     public func removeObservers() {
+        guard let uidObserve else { return }
+        // отписываемся от uid
         databasePath?
             .child(DB.Todo.name)
+            .child(uidObserve)
             .removeAllObservers()
     }
 
     public func addObservers() {
+        guard let uid = UserData.shared.user?.id else { return }
+        // запомним uid
+        self.uidObserve = uid
+        // подписываемся на добавление записей
         databasePath?
             .child(DB.Todo.name)
+            .child(uid)
             .observe(.childAdded, with: addRecord)
+        // подписываемся на изменение записей
+        databasePath?
+            .child(DB.Todo.name)
+            .child(uid)
+            .observe(.childChanged, with: addRecord)
+        // подписываемся на удаление записей
+        databasePath?
+            .child(DB.Todo.name)
+            .child(uid)
+            .observe(.childRemoved, with: removedRecord)
     }
 
     private func addRecord(snapshot: DataSnapshot) {
         guard let json = snapshot.value as? [String: Any] else { return }
         do {
             let records = try decodeData(json)
+            // публикуем
+            todoSubject.send(records)
         } catch {
-            print("an error occurred", error)
+            print("addRecord: an error occurred", error)
         }
     }
 
+    private func removedRecord(snapshot: DataSnapshot) {
+        guard let json = snapshot.value as? [String: Any] else { return }
+        do {
+            let records = try decodeData(json)
+            // публикуем
+            todoDelSubject.send(records)
+        } catch {
+            print("removedRecord: an error occurred", error)
+        }
+    }
+
+    // Возвращаем Publisher
+    public func getTodoPublisher() -> AnyPublisher<[ToDoDTO], Never> {
+        todoSubject.eraseToAnyPublisher()
+    }
+
+    public func getTodoDelPublisher() -> AnyPublisher<[ToDoDTO], Never> {
+        todoDelSubject.eraseToAnyPublisher()
+    }
 }
 // правила
 /*

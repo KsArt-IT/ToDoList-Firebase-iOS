@@ -31,6 +31,7 @@ final class MainViewController: BaseViewController {
     }
 
     deinit {
+        cancellables.forEach { $0.cancel() }  // Отмена всех подписок
         print("MainViewController.deinit")
     }
 

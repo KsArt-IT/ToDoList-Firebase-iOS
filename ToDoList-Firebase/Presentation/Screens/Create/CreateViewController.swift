@@ -56,19 +56,19 @@ extension CreateViewController {
             .sink { [weak self] state in
                 self?.showLoader(false)
 
-            switch state {
-                case .success:
-                    break
-                case .edit(let item):
-                    self?.screen.edit(item: item)
-                case let .failure(_, message):
-                    self?.showAlertOk(title: R.Strings.titleError, message: message)
-                case .loading:
-                    self?.showLoader()
-                case .none:
-                    break
-            }
-        }.store(in: &cancellables)
+                switch state {
+                    case .success:
+                        break
+                    case .edit(let item):
+                        self?.screen.edit(item: item)
+                    case let .failure(_, message):
+                        self?.showAlertOk(title: R.Strings.titleError, message: message)
+                    case .loading:
+                        self?.showLoader()
+                    case .none:
+                        break
+                }
+            }.store(in: &cancellables)
     }
 
 }

@@ -13,7 +13,7 @@ final class CreateViewModel: TaskViewModel {
     private weak var coordinator: Coordinator?
     private let repository: DataRepository
 
-    private let item: ToDoItem?
+    private var item: ToDoItem?
     @Published var date = Date()
     @Published var title = ""
     @Published var text = ""
@@ -70,12 +70,18 @@ final class CreateViewModel: TaskViewModel {
         if UserData.shared.user == nil {
             self.toLogin()
         } else {
-            if let item = self.item {
-                date = item.date
-                title = item.title
-                text = item.text
-                viewState = .edit(item: item)
-            }
+            let item = self.item ?? ToDoItem(
+                id: UUID().uuidString,
+                date: self.date,
+                title: self.title,
+                text: self.text,
+                isCompleted: false
+            )
+            self.item = item
+            date = item.date
+            title = item.title
+            text = item.text
+            viewState = .edit(item: item)
         }
     }
 

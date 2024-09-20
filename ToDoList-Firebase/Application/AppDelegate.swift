@@ -7,6 +7,7 @@
 
 import UIKit
 import FirebaseCore
+import FirebaseDatabase
 import GoogleSignIn
 
 @main
@@ -15,6 +16,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
 
         FirebaseApp.configure()
+        // Включаем локальное кэширование до использования базы данных
+        // Настройка isPersistenceEnabled = true должна быть выполнена один раз при инициализации Firebase,
+        // и до того, как будет выполнен любой запрос к базе данных.
+        let db = Database.database(url: DB.url)
+        db.isPersistenceEnabled = true
+
         // needle generate ToDoList-Firebase/DI/NeedleGenerated.swift ToDoList-Firebase/
         // Выполнить сгенерированный код Neddle генератором
         registerProviderFactories()

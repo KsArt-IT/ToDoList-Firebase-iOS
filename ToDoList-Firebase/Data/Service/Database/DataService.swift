@@ -15,6 +15,6 @@ protocol DataService {
     func deleteData(id: String) async -> Result<Bool, Error>
     func addObservers()
     func removeObservers()
-    func getTodoPublisher() -> AnyPublisher<[ToDoDTO], Never>
-    func getTodoDelPublisher() -> AnyPublisher<[ToDoDTO], Never>
+    func getTodoPublisher() -> AnyPublisher<ToDoDTO, Never>
+    func getTodoDelPublisher() -> AnyPublisher<ToDoDTO, Never>
 }

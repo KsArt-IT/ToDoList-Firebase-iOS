@@ -57,12 +57,6 @@ final class MainViewModel: TaskViewModel, ObservableObject {
         toAdd()
     }
 
-    public func rename(at index: Int, title: String, text: String) {
-        guard insideOfList(index) else { return }
-
-        change(at: index, title: title)
-    }
-
     public func remove(at index: Int) {
         guard insideOfList(index) else { return }
 
@@ -78,11 +72,30 @@ final class MainViewModel: TaskViewModel, ObservableObject {
                 case .failure(let error):
                     // восстановить элемент и обновить таблицу
                     DispatchQueue.main.async { [weak self] in
-                        self?.list.append(item)
-                        self?.viewState = .success
+                        self?.updateList(item)
                         // отобразить ошибку
                         self?.showError(error: error)
                     }
+                case .none:
+                    self?.viewState = .none
+            }
+        }
+    }
+
+    private func change(at index: Int) {
+        guard insideOfList(index) else { return }
+
+        let item = list[index]
+        // обновим в базе
+        launch { [weak self] in
+            self?.viewState = .loading
+            let result = await self?.repository.updateData(todo: item)
+            switch result {
+                case .success(_):
+                    self?.viewState = .none
+                case .failure(let error):
+                    // отобразить ошибку
+                    self?.showError(error: error)
                 case .none:
                     self?.viewState = .none
             }
@@ -105,12 +118,15 @@ final class MainViewModel: TaskViewModel, ObservableObject {
     }
 
     private func change(at index: Int, title: String? = nil, text: String? = nil, date: Date? = nil, isCompleted: Bool? = nil) {
+        // обновим локально
         list[index] = list[index].copy(
             date: date,
             title: title,
             text: text,
             isCompleted: isCompleted
         )
+        // обновим в базе
+        change(at: index)
     }
 
     private func showError(error: Error) {
@@ -146,33 +162,30 @@ final class MainViewModel: TaskViewModel, ObservableObject {
         // для добавления и изменения элементов списка
         repository.getTodoPublisher()
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] todos in
-                self?.updateList(todos)
+            .sink { [weak self] todo in
+                self?.updateList(todo)
             }
             .store(in: &cancellables)
         // для удаления элементов из списка
         repository.getTodoDelPublisher()
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] todos in
-                self?.deleteFromList(todos)
+            .sink { [weak self] todo in
+                self?.deleteFromList(todo)
             }
             .store(in: &cancellables)
+        repository.addObservers()
     }
 
-    private func updateList(_ newTodos: [ToDoItem]) {
-        var todoDict = Dictionary(uniqueKeysWithValues: list.map { ($0.id, $0) })
-
-        for newTodo in newTodos {
-            todoDict[newTodo.id] = newTodo
-        }
-
-        sortList(Array(todoDict.values))
+    private func updateList(_ newTodo: ToDoItem) {
+        var newList = list.filter { $0.id != newTodo.id }
+        newList.append(newTodo)
+        sortList(newList)
     }
 
-    private func deleteFromList(_ todos: [ToDoItem]) {
-        list.removeAll { todo in
-            todos.contains { $0.id == todo.id }
-        }
+    private func deleteFromList(_ todo: ToDoItem) {
+        // после удаления, не сортируем
+        list.removeAll { $0.id == todo.id }
+        viewState = .success
     }
 
     private func sortList(_ newList: [ToDoItem]) {

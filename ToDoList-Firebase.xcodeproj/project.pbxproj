@@ -8,8 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		F100D1A72C90C0D3008274A4 /* GoogleSignInSwift in Frameworks */ = {isa = PBXBuildFile; productRef = F100D1A62C90C0D3008274A4 /* GoogleSignInSwift */; };
-		F11A74252C91924600D3EE31 /* FacebookCore in Frameworks */ = {isa = PBXBuildFile; productRef = F11A74242C91924600D3EE31 /* FacebookCore */; };
-		F11A74272C91924600D3EE31 /* FacebookLogin in Frameworks */ = {isa = PBXBuildFile; productRef = F11A74262C91924600D3EE31 /* FacebookLogin */; };
 		F19B76D82C89DEE40048FF42 /* NeedleFoundation in Frameworks */ = {isa = PBXBuildFile; productRef = F19B76D72C89DEE40048FF42 /* NeedleFoundation */; };
 		F1EE9B762C89D096000719D9 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = F1EE9B752C89D096000719D9 /* FirebaseAuth */; };
 		F1EE9B782C89D096000719D9 /* FirebaseDatabase in Frameworks */ = {isa = PBXBuildFile; productRef = F1EE9B772C89D096000719D9 /* FirebaseDatabase */; };
@@ -39,8 +37,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				F1EE9B782C89D096000719D9 /* FirebaseDatabase in Frameworks */,
-				F11A74252C91924600D3EE31 /* FacebookCore in Frameworks */,
-				F11A74272C91924600D3EE31 /* FacebookLogin in Frameworks */,
 				F19B76D82C89DEE40048FF42 /* NeedleFoundation in Frameworks */,
 				F1EE9B762C89D096000719D9 /* FirebaseAuth in Frameworks */,
 				F100D1A72C90C0D3008274A4 /* GoogleSignInSwift in Frameworks */,
@@ -90,8 +86,6 @@
 				F1EE9B772C89D096000719D9 /* FirebaseDatabase */,
 				F19B76D72C89DEE40048FF42 /* NeedleFoundation */,
 				F100D1A62C90C0D3008274A4 /* GoogleSignInSwift */,
-				F11A74242C91924600D3EE31 /* FacebookCore */,
-				F11A74262C91924600D3EE31 /* FacebookLogin */,
 			);
 			productName = "ToDoList-Firebase";
 			productReference = F1EE9B2E2C89C079000719D9 /* ToDoList-Firebase.app */;
@@ -128,7 +122,6 @@
 				F1EE9B742C89D096000719D9 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 				F19B76D62C89DEE40048FF42 /* XCRemoteSwiftPackageReference "needle" */,
 				F100D1A52C90C0D3008274A4 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */,
-				F11A74232C91924600D3EE31 /* XCRemoteSwiftPackageReference "facebook-ios-sdk" */,
 			);
 			productRefGroup = F1EE9B2F2C89C079000719D9 /* Products */;
 			projectDirPath = "";
@@ -377,14 +370,6 @@
 				minimumVersion = 8.0.0;
 			};
 		};
-		F11A74232C91924600D3EE31 /* XCRemoteSwiftPackageReference "facebook-ios-sdk" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/facebook/facebook-ios-sdk";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 14.1.0;
-			};
-		};
 		F19B76D62C89DEE40048FF42 /* XCRemoteSwiftPackageReference "needle" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/uber/needle.git";
@@ -408,16 +393,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = F100D1A52C90C0D3008274A4 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */;
 			productName = GoogleSignInSwift;
-		};
-		F11A74242C91924600D3EE31 /* FacebookCore */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = F11A74232C91924600D3EE31 /* XCRemoteSwiftPackageReference "facebook-ios-sdk" */;
-			productName = FacebookCore;
-		};
-		F11A74262C91924600D3EE31 /* FacebookLogin */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = F11A74232C91924600D3EE31 /* XCRemoteSwiftPackageReference "facebook-ios-sdk" */;
-			productName = FacebookLogin;
 		};
 		F19B76D72C89DEE40048FF42 /* NeedleFoundation */ = {
 			isa = XCSwiftPackageProductDependency;

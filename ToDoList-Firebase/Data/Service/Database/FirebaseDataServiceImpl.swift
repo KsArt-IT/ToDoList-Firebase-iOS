@@ -13,18 +13,17 @@ import Combine
 
 final class FirebaseDataServiceImpl: DataService {
     // Паблишер для передачи данных
-    private let todoSubject = PassthroughSubject<[ToDoDTO], Never>()
-    private let todoDelSubject = PassthroughSubject<[ToDoDTO], Never>()
+    private let todoSubject = PassthroughSubject<ToDoDTO, Never>()
+    private let todoDelSubject = PassthroughSubject<ToDoDTO, Never>()
     private var uidObserve: String?
 
     private let encoder = JSONEncoder()
     private let decoder = JSONDecoder()
 
     private lazy var databasePath: DatabaseReference? = {
-        // прописываем путь к данным, от которых будем строить наследника, в правилах доступа прописываем
-        let db = Database.database(url: DB.url)
-        db.isPersistenceEnabled = true
-        return db.reference()
+        // прописываем путь к данным, от которых будем строить наследника, тут можно указать детей .child(DB.Todo.name)
+        // в правилах доступа прописываем
+        Database.database(url: DB.url).reference()
     }()
 
     public func saveData(todo: ToDoDTO) async -> Result<Bool, Error> {
@@ -142,9 +141,14 @@ final class FirebaseDataServiceImpl: DataService {
             .child(DB.Todo.name)
             .child(uidObserve)
             .removeAllObservers()
+        self.uidObserve = nil
     }
 
     public func addObservers() {
+        // удалим наблюдателя
+        if self.uidObserve != nil {
+            removeObservers()
+        }
         guard let uid = UserData.shared.user?.id else { return }
         // запомним uid
         self.uidObserve = uid
@@ -166,7 +170,7 @@ final class FirebaseDataServiceImpl: DataService {
     }
 
     private func addRecord(snapshot: DataSnapshot) {
-        guard let json = snapshot.value as? [String: Any] else { return }
+        guard let json = snapshot.value else { return }
         do {
             let records = try decodeData(json)
             // публикуем
@@ -177,7 +181,7 @@ final class FirebaseDataServiceImpl: DataService {
     }
 
     private func removedRecord(snapshot: DataSnapshot) {
-        guard let json = snapshot.value as? [String: Any] else { return }
+        guard let json = snapshot.value else { return }
         do {
             let records = try decodeData(json)
             // публикуем
@@ -188,11 +192,11 @@ final class FirebaseDataServiceImpl: DataService {
     }
 
     // Возвращаем Publisher
-    public func getTodoPublisher() -> AnyPublisher<[ToDoDTO], Never> {
+    public func getTodoPublisher() -> AnyPublisher<ToDoDTO, Never> {
         todoSubject.eraseToAnyPublisher()
     }
 
-    public func getTodoDelPublisher() -> AnyPublisher<[ToDoDTO], Never> {
+    public func getTodoDelPublisher() -> AnyPublisher<ToDoDTO, Never> {
         todoDelSubject.eraseToAnyPublisher()
     }
 }

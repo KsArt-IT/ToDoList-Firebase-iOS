@@ -47,6 +47,23 @@
         }
       }
     },
+    "Change" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Изменить"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Змінити"
+          }
+        }
+      }
+    },
     "createButton" : {
       "extractionState" : "manual",
       "localizations" : {

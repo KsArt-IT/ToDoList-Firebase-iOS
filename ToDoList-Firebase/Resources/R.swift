@@ -33,7 +33,7 @@ enum R {
         // actions
         static let deleteAction = String(localized: "deleteButton")
         static let forTomorrowAction = String(localized: "forTomorrowButton")
-        static let renameAction = String(localized: "renameButton")
+        static let changeAction = String(localized: "Change")
         static let okAction = String(localized: "okAction")
         static let cancelAction = String(localized: "cancelAction")
 

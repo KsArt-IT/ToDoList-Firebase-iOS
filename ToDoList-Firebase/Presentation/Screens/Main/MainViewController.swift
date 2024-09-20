@@ -124,14 +124,14 @@ extension MainViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
 
         // 2 кнопки действий
-        let actionRename = UIContextualAction(style: .normal, title: R.Strings.renameAction) { [weak self] _, _, completed in
+        let actionChange = UIContextualAction(style: .normal, title: R.Strings.changeAction) { [weak self] _, _, completed in
 
             self?.viewModel.edit(at: indexPath.row)
             // скрыть кнопку после
             completed(true)
         }
         // цвет фона
-        actionRename.backgroundColor = .magenta
+        actionChange.backgroundColor = .magenta
 
         let actionTomorrow = UIContextualAction(style: .normal, title: R.Strings.forTomorrowAction) { [weak self] _, _, completed in
             self?.viewModel.forTomorrow(at: indexPath.row)
@@ -142,7 +142,7 @@ extension MainViewController: UITableViewDelegate {
         }
         actionTomorrow.backgroundColor = .blue
 
-        return UISwipeActionsConfiguration(actions: [actionRename, actionTomorrow])
+        return UISwipeActionsConfiguration(actions: [actionChange, actionTomorrow])
     }
 
     // показывает кнопки с права, когда свайпим в лево

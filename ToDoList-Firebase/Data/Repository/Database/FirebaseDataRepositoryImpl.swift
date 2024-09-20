@@ -46,15 +46,15 @@ final class FirebaseDataRepositoryImpl: DataRepository {
         service.removeObservers()
     }
 
-    public func getTodoPublisher() -> AnyPublisher<[ToDoItem], Never> {
+    public func getTodoPublisher() -> AnyPublisher<ToDoItem, Never> {
         service.getTodoPublisher()
-            .map { $0.map { $0.mapToItem() } }
+            .map { $0.mapToItem() }
             .eraseToAnyPublisher()
     }
 
-    public func getTodoDelPublisher() -> AnyPublisher<[ToDoItem], Never> {
+    public func getTodoDelPublisher() -> AnyPublisher<ToDoItem, Never> {
         service.getTodoDelPublisher()
-            .map { $0.map { $0.mapToItem() } }
+            .map { $0.mapToItem() }
             .eraseToAnyPublisher()
     }
 }

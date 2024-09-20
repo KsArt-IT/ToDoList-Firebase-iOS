@@ -45,10 +45,21 @@ final class MainViewModel: TaskViewModel, ObservableObject {
     public func forTomorrow(at index: Int) {
         guard insideOfList(index) else { return }
 
-        var date = list[index].date
-        // добавим сутки 24 * 3600
-        date.addTimeInterval(Constants.dayInterval)
-        change(at: index, date: date)
+        // необходимо установить завтрешний день, а время оставить из даты
+        let date = list[index].date
+
+        var cuttertdate = Date() // Текущая дата
+        let calendar = Calendar.current
+        if let tomorrow = calendar.date(byAdding: .day, value: 1, to: cuttertdate) {
+            var dateComponents = calendar.dateComponents([.year, .month, .day], from: tomorrow)
+            let timeComponents = calendar.dateComponents([.hour, .minute], from: date)
+            dateComponents.hour = timeComponents.hour
+            dateComponents.minute = timeComponents.minute
+            dateComponents.second = 0
+            if let updatedDate = calendar.date(from: dateComponents) {
+                change(at: index, date: updatedDate, isCompleted: false)
+            }
+        }
     }
 
     public func toggle(at index: Int) {
@@ -58,15 +69,19 @@ final class MainViewModel: TaskViewModel, ObservableObject {
     }
 
     private func change(at index: Int, title: String? = nil, text: String? = nil, date: Date? = nil, isCompleted: Bool? = nil) {
-        // обновим локально
-        list[index] = list[index].copy(
+        let item = list[index].copy(
             date: date,
             title: title,
             text: text,
             isCompleted: isCompleted
         )
-        // обновим в базе
-        change(at: index)
+        // если не изменился, то и не будем менять
+        if item != list[index] {
+            // обновим локально
+            list[index] = item
+            // обновим в базе
+            change(at: index)
+        }
     }
 
     public func getItem(at index: Int) -> ToDoItem? {

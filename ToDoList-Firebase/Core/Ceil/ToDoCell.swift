@@ -40,7 +40,7 @@ final class ToDoCell: UITableViewCell {
         let label = UILabel()
         label.font = .systemFont(ofSize: 12, weight: .light, width: .condensed)
         label.textColor = .blue
-        label.text = "DD.MM.YYYY"
+        label.text = R.Strings.dateTimeFormat
         return label
     }()
     private let completeImageView: UIImageView = {
@@ -64,9 +64,7 @@ final class ToDoCell: UITableViewCell {
         titleLabel.text = item.title
         noteLabel.text = item.text
 
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "EEEE, dd.MM.yyyy"
-        dateLabel.text = dateFormatter.string(from: item.date)
+        dateLabel.text = item.date.toStringDateTime()
         // установим цвет даты в зависимости от просроченности выполнения
         if item.isCompleted || Date() < item.date {
             dateLabel.textColor = .blue

@@ -10,6 +10,8 @@ import Foundation
 enum R {
 
     enum Strings {
+        static let dateTimeFormat =  "EEEE, dd.MM.yyyy HH:mm"
+
         // email
         static let email = String(localized: "Email")
         static let emailPlaceholder = String(localized: "EmailPlaceholder")

@@ -14,7 +14,7 @@ final class CreateViewModel: TaskViewModel {
     private let repository: DataRepository
 
     private let item: ToDoItem?
-    @Published var date: Date = Date()
+    @Published var date = Date()
     @Published var title = ""
     @Published var text = ""
 
@@ -64,7 +64,7 @@ final class CreateViewModel: TaskViewModel {
             }
         }
     }
-    
+
     // проверим пользователь залогинен, если да загрузим данные, иначе переход на экран логина
     private func initialize() {
         if UserData.shared.user == nil {

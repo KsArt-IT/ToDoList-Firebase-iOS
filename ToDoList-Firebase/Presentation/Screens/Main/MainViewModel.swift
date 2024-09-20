@@ -41,10 +41,32 @@ final class MainViewModel: TaskViewModel, ObservableObject {
         }
     }
 
-    public func edit(at index: Int) {
+    // MARK: - Local list changes
+    public func forTomorrow(at index: Int) {
         guard insideOfList(index) else { return }
 
-        toEdit(item: list[index])
+        var date = list[index].date
+        // добавим сутки 24 * 3600
+        date.addTimeInterval(Constants.dayInterval)
+        change(at: index, date: date)
+    }
+
+    public func toggle(at index: Int) {
+        guard insideOfList(index) else { return }
+
+        change(at: index, isCompleted: !list[index].isCompleted)
+    }
+
+    private func change(at index: Int, title: String? = nil, text: String? = nil, date: Date? = nil, isCompleted: Bool? = nil) {
+        // обновим локально
+        list[index] = list[index].copy(
+            date: date,
+            title: title,
+            text: text,
+            isCompleted: isCompleted
+        )
+        // обновим в базе
+        change(at: index)
     }
 
     public func getItem(at index: Int) -> ToDoItem? {
@@ -53,8 +75,29 @@ final class MainViewModel: TaskViewModel, ObservableObject {
         return list[index]
     }
 
-    public func add() {
-        toAdd()
+    private func sortList(_ newList: [ToDoItem]) {
+        self.list = newList.sorted { $0.date < $1.date }
+        viewState = .success
+    }
+
+    private func insideOfList(_ index: Int) -> Bool {
+        0..<list.endIndex ~= index
+    }
+
+    // MARK: - Load and Save to Database
+    private func loadData() {
+        launch { [weak self] in
+            self?.viewState = .loading
+            let result = await self?.repository.loadData()
+            switch result {
+                case .success(let list):
+                    self?.sortList(list)
+                case .failure(let error):
+                    self?.showError(error: error)
+                case .none:
+                    self?.viewState = .none
+            }
+        }
     }
 
     public func remove(at index: Int) {
@@ -102,33 +145,6 @@ final class MainViewModel: TaskViewModel, ObservableObject {
         }
     }
 
-    public func forTomorrow(at index: Int) {
-        guard insideOfList(index) else { return }
-
-        var date = list[index].date
-        // добавим сутки 24 * 3600
-        date.addTimeInterval(Constants.dayInterval)
-        change(at: index, date: date)
-    }
-
-    public func toggle(at index: Int) {
-        guard insideOfList(index) else { return }
-
-        change(at: index, isCompleted: !list[index].isCompleted)
-    }
-
-    private func change(at index: Int, title: String? = nil, text: String? = nil, date: Date? = nil, isCompleted: Bool? = nil) {
-        // обновим локально
-        list[index] = list[index].copy(
-            date: date,
-            title: title,
-            text: text,
-            isCompleted: isCompleted
-        )
-        // обновим в базе
-        change(at: index)
-    }
-
     private func showError(error: Error) {
         let message = if let error = error as? NetworkServiceError {
             error.localizedDescription
@@ -143,21 +159,7 @@ final class MainViewModel: TaskViewModel, ObservableObject {
         }
     }
 
-    private func loadData() {
-        launch { [weak self] in
-            self?.viewState = .loading
-            let result = await self?.repository.loadData()
-            switch result {
-                case .success(let list):
-                    self?.sortList(list)
-                case .failure(let error):
-                    self?.showError(error: error)
-                case .none:
-                    self?.viewState = .none
-            }
-        }
-    }
-
+    // MARK: - Monitoring changes in the database
     private func subscribeData() {
         // для добавления и изменения элементов списка
         repository.getTodoPublisher()
@@ -188,20 +190,6 @@ final class MainViewModel: TaskViewModel, ObservableObject {
         viewState = .success
     }
 
-    private func sortList(_ newList: [ToDoItem]) {
-        self.list = newList.sorted { $0.date < $1.date }
-        viewState = .success
-    }
-
-    private func insideOfList(_ index: Int) -> Bool {
-        0..<list.endIndex ~= index
-    }
-
-    public func logout() {
-        UserData.shared.isNeedLogout = true
-        toLogin()
-    }
-
     override func onCleared() {
         // Отмена всех подписок
         cancellables.forEach { $0.cancel() }
@@ -215,6 +203,21 @@ final class MainViewModel: TaskViewModel, ObservableObject {
     }
 
     // MARK: - Navigate
+    public func add() {
+        toAdd()
+    }
+
+    public func edit(at index: Int) {
+        guard insideOfList(index) else { return }
+
+        toEdit(item: list[index])
+    }
+
+    public func logout() {
+        UserData.shared.isNeedLogout = true
+        toLogin()
+    }
+
     private func toLogin() {
         navigate(to: .login)
     }

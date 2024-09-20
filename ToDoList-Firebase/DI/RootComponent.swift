@@ -8,8 +8,12 @@
 import Foundation
 import NeedleFoundation
 
-// needle generate TMDB_Movies/DI/NeedleGenerated.swift TMDB_Movies/
-class RootComponent: BootstrapComponent {
+class RootComponent: BootstrapComponent, AuthRepositoryDependency, DataRepositoryDependency {
+
+    // Authentication-related dependencies
+    var authComponent: AuthComponent {
+        shared { AuthComponent(parent: self) }
+    }
 
     private var authNetworkService: AuthService {
         shared { FirebaseAuthServiceImpl() }
@@ -19,32 +23,17 @@ class RootComponent: BootstrapComponent {
         shared { FirebaseAuthRepositoryImpl(service: authNetworkService) }
     }
 
+    // Data-related dependencies
+    var dataComponent: DataComponent {
+        shared { DataComponent(parent: self) }
+    }
+
     private var dataNetworkService: DataService {
         shared { FirebaseDataServiceImpl() }
     }
 
     public var dataRepository: DataRepository {
         shared { FirebaseDataRepositoryImpl(service: dataNetworkService) }
-    }
-
-    var mainComponent: MainComponent {
-        MainComponent(parent: self)
-    }
-
-    var createComponent: CreateComponent {
-        CreateComponent(parent: self)
-    }
-
-    var loginComponent: LoginComponent {
-        LoginComponent(parent: self)
-    }
-
-    var registrationComponent: RegistrationComponent {
-        RegistrationComponent(parent: self)
-    }
-
-    var resetPasswordComponent: ResetPasswordComponent {
-        ResetPasswordComponent(parent: self)
     }
 
 }

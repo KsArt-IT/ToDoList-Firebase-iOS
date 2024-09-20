@@ -20,12 +20,12 @@ final class MainCoordinator: BaseCoordinator {
     }
 
     private func startMainFlow() {
-        let vc = component.mainComponent.viewController(coordinator: self)
+        let vc = component.dataComponent.mainComponent.viewController(coordinator: self)
         navController?.pushViewController(vc, animated: true)
     }
 
     private func startCreateFlow(item: ToDoItem?) {
-        let vc = component.createComponent.viewController(coordinator: self, item: item)
+        let vc = component.dataComponent.createComponent.viewController(coordinator: self, item: item)
         navController?.present(vc, animated: true)
     }
 

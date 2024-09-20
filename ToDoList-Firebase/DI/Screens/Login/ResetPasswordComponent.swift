@@ -8,7 +8,7 @@
 import UIKit
 import NeedleFoundation
 
-class ResetPasswordComponent: Component<RepositoryDependency> {
+class ResetPasswordComponent: Component<AuthRepositoryDependency> {
     private func viewModel(_ coordinator: Coordinator) -> ResetViewModel {
         .init(coordinator: coordinator, repository: dependency.authRepository)
     }

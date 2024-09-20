@@ -26,17 +26,17 @@ final class LoginCoordinator: BaseCoordinator {
     }
 
     private func startLoginFlow() {
-        let vc = component.loginComponent.viewController(coordinator: self)
+        let vc = component.authComponent.loginComponent.viewController(coordinator: self)
         navController?.pushViewController(vc, animated: true)
     }
 
     private func startRegistrationFlow() {
-        let vc = component.registrationComponent.viewController(coordinator: self)
+        let vc = component.authComponent.registrationComponent.viewController(coordinator: self)
         navController?.pushViewController(vc, animated: true)
     }
 
     private func startResetPasswordFlow() {
-        let vc = component.resetPasswordComponent.viewController(coordinator: self)
+        let vc = component.authComponent.resetPasswordComponent.viewController(coordinator: self)
         navController?.pushViewController(vc, animated: true)
     }
 

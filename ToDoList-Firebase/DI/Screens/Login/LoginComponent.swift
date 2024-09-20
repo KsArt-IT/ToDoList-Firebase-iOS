@@ -8,7 +8,7 @@
 import UIKit
 import NeedleFoundation
 
-class LoginComponent: Component<RepositoryDependency> {
+class LoginComponent: Component<AuthRepositoryDependency> {
     private func viewModel(_ coordinator: Coordinator) -> LoginViewModel {
         .init(coordinator: coordinator, repository: dependency.authRepository)
     }

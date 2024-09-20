@@ -8,6 +8,6 @@
 import Foundation
 import NeedleFoundation
 
-protocol RepositoryDependency: Dependency {
+protocol AuthRepositoryDependency: Dependency {
     var authRepository: AuthRepository { get }
 }

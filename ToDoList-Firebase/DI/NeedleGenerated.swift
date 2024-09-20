@@ -13,11 +13,15 @@ private func parent1(_ component: NeedleFoundation.Scope) -> NeedleFoundation.Sc
     return component.parent
 }
 
+private func parent2(_ component: NeedleFoundation.Scope) -> NeedleFoundation.Scope {
+    return component.parent.parent
+}
+
 // MARK: - Providers
 
 #if !NEEDLE_DYNAMIC
 
-private class DataRepositoryDependency453d57de9749f65d685aProvider: DataRepositoryDependency {
+private class DataRepositoryDependency943f09251b792f9033e6Provider: DataRepositoryDependency {
     var dataRepository: DataRepository {
         return rootComponent.dataRepository
     }
@@ -26,11 +30,11 @@ private class DataRepositoryDependency453d57de9749f65d685aProvider: DataReposito
         self.rootComponent = rootComponent
     }
 }
-/// ^->RootComponent->MainComponent
-private func factoryee12beae2ed4382acfd6b3a8f24c1d289f2c0f2e(_ component: NeedleFoundation.Scope) -> AnyObject {
-    return DataRepositoryDependency453d57de9749f65d685aProvider(rootComponent: parent1(component) as! RootComponent)
+/// ^->RootComponent->DataComponent->MainComponent
+private func factory6568e02e484b6542eaf4a9403e3301bb54f80df0(_ component: NeedleFoundation.Scope) -> AnyObject {
+    return DataRepositoryDependency943f09251b792f9033e6Provider(rootComponent: parent2(component) as! RootComponent)
 }
-private class DataRepositoryDependencye556c1436a7ad95323d4Provider: DataRepositoryDependency {
+private class DataRepositoryDependency9bdaf2614a68e3db4320Provider: DataRepositoryDependency {
     var dataRepository: DataRepository {
         return rootComponent.dataRepository
     }
@@ -39,11 +43,24 @@ private class DataRepositoryDependencye556c1436a7ad95323d4Provider: DataReposito
         self.rootComponent = rootComponent
     }
 }
-/// ^->RootComponent->CreateComponent
-private func factoryc8db626a78f700e25946b3a8f24c1d289f2c0f2e(_ component: NeedleFoundation.Scope) -> AnyObject {
-    return DataRepositoryDependencye556c1436a7ad95323d4Provider(rootComponent: parent1(component) as! RootComponent)
+/// ^->RootComponent->DataComponent
+private func factory1fc63d1bfc36477eea87b3a8f24c1d289f2c0f2e(_ component: NeedleFoundation.Scope) -> AnyObject {
+    return DataRepositoryDependency9bdaf2614a68e3db4320Provider(rootComponent: parent1(component) as! RootComponent)
 }
-private class RepositoryDependencyf7277148990d4f0a2b24Provider: RepositoryDependency {
+private class DataRepositoryDependency9854ec5e6fde7eac9ca5Provider: DataRepositoryDependency {
+    var dataRepository: DataRepository {
+        return rootComponent.dataRepository
+    }
+    private let rootComponent: RootComponent
+    init(rootComponent: RootComponent) {
+        self.rootComponent = rootComponent
+    }
+}
+/// ^->RootComponent->DataComponent->CreateComponent
+private func factory488dd2dff6881fbbf99ea9403e3301bb54f80df0(_ component: NeedleFoundation.Scope) -> AnyObject {
+    return DataRepositoryDependency9854ec5e6fde7eac9ca5Provider(rootComponent: parent2(component) as! RootComponent)
+}
+private class AuthRepositoryDependency1594dde0ee60075d9239Provider: AuthRepositoryDependency {
     var authRepository: AuthRepository {
         return rootComponent.authRepository
     }
@@ -52,11 +69,11 @@ private class RepositoryDependencyf7277148990d4f0a2b24Provider: RepositoryDepend
         self.rootComponent = rootComponent
     }
 }
-/// ^->RootComponent->ResetPasswordComponent
-private func factory4b8d065ec49f9f58db24b3a8f24c1d289f2c0f2e(_ component: NeedleFoundation.Scope) -> AnyObject {
-    return RepositoryDependencyf7277148990d4f0a2b24Provider(rootComponent: parent1(component) as! RootComponent)
+/// ^->RootComponent->AuthComponent->ResetPasswordComponent
+private func factory0f0f1b586da94dec4538a9403e3301bb54f80df0(_ component: NeedleFoundation.Scope) -> AnyObject {
+    return AuthRepositoryDependency1594dde0ee60075d9239Provider(rootComponent: parent2(component) as! RootComponent)
 }
-private class RepositoryDependency7b8a2c1cc1880bf5adf4Provider: RepositoryDependency {
+private class AuthRepositoryDependency72382e2b19321dcd0a99Provider: AuthRepositoryDependency {
     var authRepository: AuthRepository {
         return rootComponent.authRepository
     }
@@ -65,11 +82,11 @@ private class RepositoryDependency7b8a2c1cc1880bf5adf4Provider: RepositoryDepend
         self.rootComponent = rootComponent
     }
 }
-/// ^->RootComponent->RegistrationComponent
-private func factory3fb5fdb9b985699e0376b3a8f24c1d289f2c0f2e(_ component: NeedleFoundation.Scope) -> AnyObject {
-    return RepositoryDependency7b8a2c1cc1880bf5adf4Provider(rootComponent: parent1(component) as! RootComponent)
+/// ^->RootComponent->AuthComponent
+private func factorya67059ab098a80879279b3a8f24c1d289f2c0f2e(_ component: NeedleFoundation.Scope) -> AnyObject {
+    return AuthRepositoryDependency72382e2b19321dcd0a99Provider(rootComponent: parent1(component) as! RootComponent)
 }
-private class RepositoryDependency006c7d880fec28863ecaProvider: RepositoryDependency {
+private class AuthRepositoryDependency17cee66a7bad03dd6d8bProvider: AuthRepositoryDependency {
     var authRepository: AuthRepository {
         return rootComponent.authRepository
     }
@@ -78,15 +95,34 @@ private class RepositoryDependency006c7d880fec28863ecaProvider: RepositoryDepend
         self.rootComponent = rootComponent
     }
 }
-/// ^->RootComponent->LoginComponent
-private func factorya688cdcfe16e346b8256b3a8f24c1d289f2c0f2e(_ component: NeedleFoundation.Scope) -> AnyObject {
-    return RepositoryDependency006c7d880fec28863ecaProvider(rootComponent: parent1(component) as! RootComponent)
+/// ^->RootComponent->AuthComponent->RegistrationComponent
+private func factoryf1bac6a637b24a1b79a8a9403e3301bb54f80df0(_ component: NeedleFoundation.Scope) -> AnyObject {
+    return AuthRepositoryDependency17cee66a7bad03dd6d8bProvider(rootComponent: parent2(component) as! RootComponent)
+}
+private class AuthRepositoryDependency0e4c9eb764dd3d67a367Provider: AuthRepositoryDependency {
+    var authRepository: AuthRepository {
+        return rootComponent.authRepository
+    }
+    private let rootComponent: RootComponent
+    init(rootComponent: RootComponent) {
+        self.rootComponent = rootComponent
+    }
+}
+/// ^->RootComponent->AuthComponent->LoginComponent
+private func factoryfa15f1509b6592543175a9403e3301bb54f80df0(_ component: NeedleFoundation.Scope) -> AnyObject {
+    return AuthRepositoryDependency0e4c9eb764dd3d67a367Provider(rootComponent: parent2(component) as! RootComponent)
 }
 
 #else
 extension MainComponent: Registration {
     public func registerItems() {
         keyPathToName[\DataRepositoryDependency.dataRepository] = "dataRepository-DataRepository"
+    }
+}
+extension DataComponent: Registration {
+    public func registerItems() {
+        keyPathToName[\DataRepositoryDependency.dataRepository] = "dataRepository-DataRepository"
+
     }
 }
 extension CreateComponent: Registration {
@@ -96,17 +132,23 @@ extension CreateComponent: Registration {
 }
 extension ResetPasswordComponent: Registration {
     public func registerItems() {
-        keyPathToName[\RepositoryDependency.authRepository] = "authRepository-AuthRepository"
+        keyPathToName[\AuthRepositoryDependency.authRepository] = "authRepository-AuthRepository"
+    }
+}
+extension AuthComponent: Registration {
+    public func registerItems() {
+        keyPathToName[\AuthRepositoryDependency.authRepository] = "authRepository-AuthRepository"
+
     }
 }
 extension RegistrationComponent: Registration {
     public func registerItems() {
-        keyPathToName[\RepositoryDependency.authRepository] = "authRepository-AuthRepository"
+        keyPathToName[\AuthRepositoryDependency.authRepository] = "authRepository-AuthRepository"
     }
 }
 extension LoginComponent: Registration {
     public func registerItems() {
-        keyPathToName[\RepositoryDependency.authRepository] = "authRepository-AuthRepository"
+        keyPathToName[\AuthRepositoryDependency.authRepository] = "authRepository-AuthRepository"
     }
 }
 extension RootComponent: Registration {
@@ -132,11 +174,13 @@ private func registerProviderFactory(_ componentPath: String, _ factory: @escapi
 #if !NEEDLE_DYNAMIC
 
 @inline(never) private func register1() {
-    registerProviderFactory("^->RootComponent->MainComponent", factoryee12beae2ed4382acfd6b3a8f24c1d289f2c0f2e)
-    registerProviderFactory("^->RootComponent->CreateComponent", factoryc8db626a78f700e25946b3a8f24c1d289f2c0f2e)
-    registerProviderFactory("^->RootComponent->ResetPasswordComponent", factory4b8d065ec49f9f58db24b3a8f24c1d289f2c0f2e)
-    registerProviderFactory("^->RootComponent->RegistrationComponent", factory3fb5fdb9b985699e0376b3a8f24c1d289f2c0f2e)
-    registerProviderFactory("^->RootComponent->LoginComponent", factorya688cdcfe16e346b8256b3a8f24c1d289f2c0f2e)
+    registerProviderFactory("^->RootComponent->DataComponent->MainComponent", factory6568e02e484b6542eaf4a9403e3301bb54f80df0)
+    registerProviderFactory("^->RootComponent->DataComponent", factory1fc63d1bfc36477eea87b3a8f24c1d289f2c0f2e)
+    registerProviderFactory("^->RootComponent->DataComponent->CreateComponent", factory488dd2dff6881fbbf99ea9403e3301bb54f80df0)
+    registerProviderFactory("^->RootComponent->AuthComponent->ResetPasswordComponent", factory0f0f1b586da94dec4538a9403e3301bb54f80df0)
+    registerProviderFactory("^->RootComponent->AuthComponent", factorya67059ab098a80879279b3a8f24c1d289f2c0f2e)
+    registerProviderFactory("^->RootComponent->AuthComponent->RegistrationComponent", factoryf1bac6a637b24a1b79a8a9403e3301bb54f80df0)
+    registerProviderFactory("^->RootComponent->AuthComponent->LoginComponent", factoryfa15f1509b6592543175a9403e3301bb54f80df0)
     registerProviderFactory("^->RootComponent", factoryEmptyDependencyProvider)
 }
 #endif

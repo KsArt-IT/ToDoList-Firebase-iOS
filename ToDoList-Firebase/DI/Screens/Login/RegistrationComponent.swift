@@ -8,7 +8,7 @@
 import UIKit
 import NeedleFoundation
 
-class RegistrationComponent: Component<RepositoryDependency> {
+class RegistrationComponent: Component<AuthRepositoryDependency> {
     private func viewModel(_ coordinator: Coordinator) -> RegistrationViewModel {
         .init(coordinator: coordinator, repository: dependency.authRepository)
     }

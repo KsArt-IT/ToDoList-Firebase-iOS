@@ -91,8 +91,8 @@ final class FirebaseDataServiceImpl: DataService {
         let snapshot = try await databasePath?
             .child(DB.Todo.name) // Название БД
             .child(uid)// uid пользователя, который залогинен
-            .queryOrdered(byChild: DB.Todo.Fields.date) // отсортировать по
-            .queryLimited(toFirst: 10) // первые данные
+//            .queryOrdered(byChild: DB.Todo.Fields.date) // отсортировать по
+//            .queryLimited(toFirst: 10) // первые данные
             .getData() // получить данные
         return if let value = snapshot?.value as? [String: Any] {
             value

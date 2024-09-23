@@ -13,8 +13,6 @@ protocol DataService {
     func saveData(todo: ToDoDTO) async -> Result<Bool, Error>
     func updateData(todo: ToDoDTO) async -> Result<Bool, Error>
     func deleteData(id: String) async -> Result<Bool, Error>
-    func addObservers()
-    func removeObservers()
-    func getTodoPublisher() -> AnyPublisher<ToDoDTO, Never>
-    func getTodoDelPublisher() -> AnyPublisher<ToDoDTO, Never>
+
+    func updateUser(user: UserAuth) async -> Result<Bool, Error>
 }

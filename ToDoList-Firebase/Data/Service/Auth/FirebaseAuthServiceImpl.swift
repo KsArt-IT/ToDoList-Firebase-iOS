@@ -30,9 +30,12 @@ final class FirebaseAuthServiceImpl: AuthService {
             let userAuth = UserAuth(
                 id: user.uid,
                 token: token,
+                refreshToken: user.refreshToken ?? "",
                 name: user.displayName ?? "No name",
                 email: user.email ?? "No Email",
-                photo: photo
+                photoUrl: user.photoURL?.absoluteString,
+                photo: photo,
+                date: Date()
             )
             return .success(userAuth)
         } catch {

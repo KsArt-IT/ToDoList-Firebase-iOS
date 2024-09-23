@@ -11,7 +11,6 @@ import Combine
 final class MainViewModel: TaskViewModel, ObservableObject {
 
     @Published var viewState: ViewStates = .none
-    private var cancellables: Set<AnyCancellable> = []
 
     private weak var coordinator: Coordinator?
     private let repository: DataRepository
@@ -32,12 +31,19 @@ final class MainViewModel: TaskViewModel, ObservableObject {
     // проверим пользователь залогинен, если да загрузим данные, иначе переход на экран логина
     private func initialize() {
         if UserData.shared.user != nil {
+            // сохраним последний вход в DB
+            self.saveLogin()
             // загружаем данные 1 раз
             self.loadData()
-            // наблюдаем за добавлением и изменением записей
-            self.subscribeData()
         } else {
             self.toLogin()
+        }
+    }
+
+    private func saveLogin() {
+        guard let user = UserData.shared.user else { return }
+        launch { [weak self] in
+            let _ = await self?.repository.updateUser(user: user)
         }
     }
 
@@ -48,9 +54,9 @@ final class MainViewModel: TaskViewModel, ObservableObject {
         // необходимо установить завтрешний день, а время оставить из даты
         let date = list[index].date
 
-        var cuttertdate = Date() // Текущая дата
+        var currentdate = Date() // Текущая дата
         let calendar = Calendar.current
-        if let tomorrow = calendar.date(byAdding: .day, value: 1, to: cuttertdate) {
+        if let tomorrow = calendar.date(byAdding: .day, value: 1, to: currentdate) {
             var dateComponents = calendar.dateComponents([.year, .month, .day], from: tomorrow)
             let timeComponents = calendar.dateComponents([.hour, .minute], from: date)
             dateComponents.hour = timeComponents.hour
@@ -174,25 +180,6 @@ final class MainViewModel: TaskViewModel, ObservableObject {
         }
     }
 
-    // MARK: - Monitoring changes in the database
-    private func subscribeData() {
-        // для добавления и изменения элементов списка
-        repository.getTodoPublisher()
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] todo in
-                self?.updateList(todo)
-            }
-            .store(in: &cancellables)
-        // для удаления элементов из списка
-        repository.getTodoDelPublisher()
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] todo in
-                self?.deleteFromList(todo)
-            }
-            .store(in: &cancellables)
-        repository.addObservers()
-    }
-
     private func updateList(_ newTodo: ToDoItem) {
         var newList = list.filter { $0.id != newTodo.id }
         newList.append(newTodo)
@@ -203,14 +190,6 @@ final class MainViewModel: TaskViewModel, ObservableObject {
         // после удаления, не сортируем
         list.removeAll { $0.id == todo.id }
         viewState = .success
-    }
-
-    override func onCleared() {
-        // Отмена всех подписок
-        cancellables.forEach { $0.cancel() }
-        // закрыть все обсерверы DB
-        repository.removeObservers()
-        super.onCleared()
     }
 
     deinit {

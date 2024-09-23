@@ -13,8 +13,17 @@ private let dateFormatter: DateFormatter = {
     return formatter
 }()
 
+private let dateUTCFormatter: DateFormatter = {
+    let formatter = DateFormatter()
+    formatter.dateFormat = R.Strings.dateTimeUTCFormat
+    return formatter
+}()
+
 extension Date {
     func toStringDateTime() -> String {
         dateFormatter.string(from: self)
+    }
+    func toStringDateUTC() -> String {
+        dateUTCFormatter.string(from: self)
     }
 }

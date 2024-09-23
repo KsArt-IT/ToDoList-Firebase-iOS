@@ -11,6 +11,7 @@ enum R {
 
     enum Strings {
         static let dateTimeFormat =  "EEEE, dd.MM.yyyy HH:mm"
+        static let dateTimeUTCFormat =  "yyyy.MM.dd HH:mm:ssZ"
 
         // email
         static let email = String(localized: "Email")

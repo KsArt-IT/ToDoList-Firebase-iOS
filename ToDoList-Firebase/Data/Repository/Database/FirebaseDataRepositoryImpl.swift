@@ -16,6 +16,10 @@ final class FirebaseDataRepositoryImpl: DataRepository {
         self.service = service
     }
 
+    public func updateUser(user: UserAuth) async -> Result<Bool, Error> {
+        await service.updateUser(user: user)
+    }
+    //----------------
     public func loadData() async -> Result<[ToDoItem], Error> {
         let result = await service.loadData()
         return switch result {
@@ -38,23 +42,4 @@ final class FirebaseDataRepositoryImpl: DataRepository {
         await service.deleteData(id: id)
     }
 
-    public func addObservers() {
-        service.addObservers()
-    }
-
-    public func removeObservers() {
-        service.removeObservers()
-    }
-
-    public func getTodoPublisher() -> AnyPublisher<ToDoItem, Never> {
-        service.getTodoPublisher()
-            .map { $0.mapToItem() }
-            .eraseToAnyPublisher()
-    }
-
-    public func getTodoDelPublisher() -> AnyPublisher<ToDoItem, Never> {
-        service.getTodoDelPublisher()
-            .map { $0.mapToItem() }
-            .eraseToAnyPublisher()
-    }
 }

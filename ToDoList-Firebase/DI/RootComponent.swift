@@ -29,7 +29,7 @@ class RootComponent: BootstrapComponent, AuthRepositoryDependency, DataRepositor
     }
 
     private var dataNetworkService: DataService {
-        shared { FirebaseDataServiceImpl() }
+        shared { FirebaseRestApiDataServiceImpl() }
     }
 
     public var dataRepository: DataRepository {

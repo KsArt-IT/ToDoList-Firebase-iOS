@@ -11,7 +11,6 @@ enum R {
 
     enum Strings {
         static let dateTimeFormat =  "EEEE, dd.MM.yyyy HH:mm"
-        static let dateTimeUTCFormat =  "yyyy.MM.dd HH:mm:ssZ"
 
         // email
         static let email = String(localized: "Email")
@@ -67,5 +66,7 @@ enum R {
         static let titleToDo = String(localized: "titleToDo")
         static let placeholderTitle = String(localized: "placeholderTitle")
         static let placeholderNote = String(localized: "placeholderNote")
+
+        static let updatingTable = NSAttributedString(string: String(localized: "updatingTable"))
     }
 }

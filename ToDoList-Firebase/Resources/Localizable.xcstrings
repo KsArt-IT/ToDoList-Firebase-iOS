@@ -735,6 +735,23 @@
         }
       }
     },
+    "updatingTable" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Updating data..."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Обновление данных..."
+          }
+        }
+      }
+    },
     "userDisabled" : {
       "extractionState" : "manual",
       "localizations" : {

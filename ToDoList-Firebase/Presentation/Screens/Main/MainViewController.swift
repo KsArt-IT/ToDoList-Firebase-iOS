@@ -45,7 +45,9 @@ extension MainViewController {
         super.configureViews()
         title = R.Strings.titleMain
 
-        screen.configureSource(dataSource: self, delegate: self)
+        screen.configureSource(dataSource: self, delegate: self) { [weak self] in
+            self?.viewModel.loadData()
+        }
 
         // добавляем меню для logout
         let menu = UIMenu(
@@ -70,7 +72,8 @@ extension MainViewController {
 
     override func binding() {
         viewModel.$viewState.receive(on: DispatchQueue.main).sink { [weak self] state in
-            self?.showLoader(false)
+//            self?.showLoader(false)
+            self?.screen.refresh(false)
 
             switch state {
                 case .success:
@@ -78,7 +81,8 @@ extension MainViewController {
                 case let .failure(_, message):
                     self?.showAlertOk(title: R.Strings.titleError, message: message)
                 case .loading:
-                    self?.showLoader()
+//                    self?.showLoader()
+                    self?.screen.refresh()
                 case .none:
                     break
                 case .edit(_):

@@ -57,7 +57,7 @@ final class MainViewModel: TaskViewModel, ObservableObject {
         // необходимо установить завтрешний день, а время оставить из даты
         let date = list[index].date
 
-        var currentDate = Date() // Текущая дата
+        let currentDate = Date() // Текущая дата
         let calendar = Calendar.current
         if let tomorrow = calendar.date(byAdding: .day, value: 1, to: currentDate) {
             var dateComponents = calendar.dateComponents([.year, .month, .day], from: tomorrow)
@@ -109,7 +109,7 @@ final class MainViewModel: TaskViewModel, ObservableObject {
     }
 
     // MARK: - Load and Save to Database
-    private func loadData() {
+    public func loadData() {
         launch { [weak self] in
             self?.viewState = .loading
             let result = await self?.repository.loadData()

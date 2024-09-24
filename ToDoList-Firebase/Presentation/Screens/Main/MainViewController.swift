@@ -72,7 +72,6 @@ extension MainViewController {
 
     override func binding() {
         viewModel.$viewState.receive(on: DispatchQueue.main).sink { [weak self] state in
-//            self?.showLoader(false)
             self?.screen.refresh(false)
 
             switch state {
@@ -81,7 +80,6 @@ extension MainViewController {
                 case let .failure(_, message):
                     self?.showAlertOk(title: R.Strings.titleError, message: message)
                 case .loading:
-//                    self?.showLoader()
                     self?.screen.refresh()
                 case .none:
                     break
@@ -124,7 +122,7 @@ extension MainViewController: UITableViewDelegate {
         tableView.reloadRows(at: [indexPath], with: .fade)
     }
 
-    // показывает кнопки с лева, когда свайпим в право
+    // показывает кнопки слева, когда свайпим в право
     func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
 
         // 2 кнопки действий
@@ -149,7 +147,7 @@ extension MainViewController: UITableViewDelegate {
         return UISwipeActionsConfiguration(actions: [actionChange, actionTomorrow])
     }
 
-    // показывает кнопки с права, когда свайпим в лево
+    // показывает кнопки справа, когда свайпим в лево
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
 
         // кнопки действий

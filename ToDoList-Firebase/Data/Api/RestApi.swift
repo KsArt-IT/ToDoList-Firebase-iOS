@@ -44,9 +44,7 @@ extension RestApi {
             case .todo(let id):
                 "\(DB.todo)/\(uid)/\(id)"
         }
-        guard let url = URL(string: "\(Self.baseURL)/\(path).json?auth=\(token)") else { return nil }
-        print("Url= \(url.absoluteString)")
-        return url
+        return URL(string: "\(Self.baseURL)/\(path).json?auth=\(token)")
     }
 
     static let baseURL = "https://todolist-firebase-9ecf6-default-rtdb.europe-west1.firebasedatabase.app"

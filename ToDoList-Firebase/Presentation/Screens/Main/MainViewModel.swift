@@ -46,7 +46,7 @@ final class MainViewModel: TaskViewModel, ObservableObject {
     private func saveLogin() {
         guard let user = UserData.shared.user else { return }
         launch { [weak self] in
-            let _ = await self?.repository.updateUser(user: user)
+            _ = await self?.repository.updateUser(user: user)
         }
     }
 

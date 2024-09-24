@@ -140,9 +140,13 @@ final class CreateViewScreen: BaseView {
     public func edit(item: ToDoItem) {
         titleField.text = item.title
         textView.text = item.text
-        datePicker.date = item.date
-        timePicker.date = item.date
-        updateDateLabel(item.date)
+        setDate(item.date)
+    }
+
+    private func setDate(_ date: Date) {
+        datePicker.date = date
+        timePicker.date = date
+        updateDateLabel(date)
     }
 }
 
@@ -159,6 +163,7 @@ extension CreateViewScreen {
         addSubview(timePicker)
         addSubview(createButton)
 
+        setDate(Date())
         createButton.addTarget(self, action: #selector(clickButton(_:)), for: .touchUpInside)
         titleField.addTarget(self, action: #selector(titleChanged(_:)), for: .editingChanged)
         textView.delegate = self  // Устанавливаем делегат

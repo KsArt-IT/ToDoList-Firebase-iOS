@@ -13,6 +13,7 @@ final class CreateViewModel: TaskViewModel {
     private weak var coordinator: Coordinator?
     private let repository: DataRepository
 
+    // элемент для редактирования
     private var item: ToDoItem?
     @Published var date = Date()
     @Published var title = ""
@@ -27,6 +28,20 @@ final class CreateViewModel: TaskViewModel {
         initialize()
     }
 
+    // проверим пользователь залогинен, если да загрузим данные, иначе переход на экран логина
+    private func initialize() {
+        if UserData.shared.user == nil {
+            self.toLogin()
+        } else {
+            if let item = self.item {
+                self.date = item.date
+                self.title = item.title
+                self.text = item.text
+                viewState = .edit(item: item)
+            }
+        }
+    }
+
     public func save() {
         guard !title.isEmpty, !text.isEmpty else {
             viewState = .failure(error: .alert, message: R.Strings.todoFillFields)
@@ -37,22 +52,8 @@ final class CreateViewModel: TaskViewModel {
             guard let self else { return }
 
             self.viewState = .loading
-            let newItem = if let item = self.item {
-                item.copy(
-                    date: self.date,
-                    title: self.title,
-                    text: self.text
-                )
-            } else {
-                ToDoItem(
-                    id: UUID().uuidString,
-                    date: self.date,
-                    title: self.title,
-                    text: self.text,
-                    isCompleted: false
-                )
-            }
-            let result = await self.repository.updateData(todo: newItem)
+
+            let result = await self.repository.updateData(todo: getEditedItem())
             switch result {
                 case .success(_):
                     self.viewState = .success
@@ -65,23 +66,21 @@ final class CreateViewModel: TaskViewModel {
         }
     }
 
-    // проверим пользователь залогинен, если да загрузим данные, иначе переход на экран логина
-    private func initialize() {
-        if UserData.shared.user == nil {
-            self.toLogin()
+    private func getEditedItem() -> ToDoItem {
+        if let item = self.item {
+            item.copy(
+                date: self.date,
+                title: self.title,
+                text: self.text
+            )
         } else {
-            let item = self.item ?? ToDoItem(
+            ToDoItem(
                 id: UUID().uuidString,
                 date: self.date,
                 title: self.title,
                 text: self.text,
                 isCompleted: false
             )
-            self.item = item
-            date = item.date
-            title = item.title
-            text = item.text
-            viewState = .edit(item: item)
         }
     }
 

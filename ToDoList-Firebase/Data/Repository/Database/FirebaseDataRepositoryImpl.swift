@@ -42,4 +42,10 @@ final class FirebaseDataRepositoryImpl: DataRepository {
         await service.deleteData(id: id)
     }
 
+    public func getTodoPublisher() -> AnyPublisher<ToDoItem, Never> {
+        service.getTodoPublisher()
+            .map { $0.mapToItem() }
+            .eraseToAnyPublisher()
+    }
+
 }

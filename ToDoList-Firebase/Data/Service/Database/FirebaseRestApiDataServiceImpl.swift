@@ -6,8 +6,10 @@
 //
 
 import Foundation
+import Combine
 
 final class FirebaseRestApiDataServiceImpl: DataService {
+    private let todoSubject = PassthroughSubject<ToDoDTO, Never>()
     //
     private let session = URLSession.shared
 
@@ -15,6 +17,24 @@ final class FirebaseRestApiDataServiceImpl: DataService {
     private let decoder = JSONDecoder()
 
     // MARK: - To-Do
+    public func loadData() async -> Result<[ToDoDTO], Error>  {
+        guard let user = UserData.shared.user else { return .failure(NetworkServiceError.cancelled) }
+        guard let url = RestApi.getUrl(.todos, uid: user.id, token: user.token) else { return .failure(NetworkServiceError.invalidRequest) }
+
+        do {
+            let (json, response) = try await session.data(from: url)
+            print("response=\(response)")
+            guard checkResponse(response) else {
+                return .failure(NetworkServiceError.invalidResponse)
+            }
+            let data = try decoder.decode([String: ToDoDTO].self, from: json)
+            let todos: [ToDoDTO] = Array(data.values)
+            return .success(todos)
+        } catch {
+            return .failure(NetworkServiceError.networkError(error))
+        }
+    }
+
     public func saveData(todo: ToDoDTO) async -> Result<Bool, Error> {
         guard let user = UserData.shared.user else { return .failure(NetworkServiceError.cancelled) }
         guard let url = RestApi.getUrl(.todo(id: todo.id), uid: user.id, token: user.token) else { return .failure(NetworkServiceError.invalidRequest) }
@@ -31,25 +51,8 @@ final class FirebaseRestApiDataServiceImpl: DataService {
                 return .failure(NetworkServiceError.invalidResponse)
             }
 
+            addOrChangeRecord(todo)
             return .success(true)
-        } catch {
-            return .failure(NetworkServiceError.networkError(error))
-        }
-    }
-
-    public func loadData() async -> Result<[ToDoDTO], Error>  {
-        guard let user = UserData.shared.user else { return .failure(NetworkServiceError.cancelled) }
-        guard let url = RestApi.getUrl(.todos, uid: user.id, token: user.token) else { return .failure(NetworkServiceError.invalidRequest) }
-
-        do {
-            let (json, response) = try await session.data(from: url)
-            print("response=\(response)")
-            guard checkResponse(response) else {
-                return .failure(NetworkServiceError.invalidResponse)
-            }
-            let data = try decoder.decode([String: ToDoDTO].self, from: json)
-            let todos: [ToDoDTO] = Array(data.values)
-            return .success(todos)
         } catch {
             return .failure(NetworkServiceError.networkError(error))
         }
@@ -71,6 +74,7 @@ final class FirebaseRestApiDataServiceImpl: DataService {
                 return .failure(NetworkServiceError.invalidResponse)
             }
 
+            addOrChangeRecord(todo)
             return .success(true)
         } catch {
             return .failure(NetworkServiceError.networkError(error))
@@ -173,6 +177,16 @@ final class FirebaseRestApiDataServiceImpl: DataService {
         if let httpResponse = response as? HTTPURLResponse, 200...299 ~= httpResponse.statusCode { true } else { false }
     }
 
+    // MARK: - Observe
+    public func getTodoPublisher() -> AnyPublisher<ToDoDTO, Never> {
+        todoSubject.eraseToAnyPublisher()
+    }
+
+    private func addOrChangeRecord(_ todo: ToDoDTO) {
+        // публикуем
+        todoSubject.send(todo)
+    }
+
 }
 // правила
 /*
@@ -180,14 +194,14 @@ final class FirebaseRestApiDataServiceImpl: DataService {
    "rules": {
      "users": {
        "$uid": {
-           ".read": "auth != null && auth.uid == $uid",
-           ".write": "auth != null && auth.uid == $uid"
+           ".read": "auth != null && auth.uid === $uid",
+           ".write": "auth != null && auth.uid === $uid"
        }
      },
      "todo": {
        "$uid": {
-           ".read": "auth != null && auth.uid == $uid",
-           ".write": "auth != null && auth.uid == $uid"
+           ".read": "auth != null && auth.uid === $uid",
+           ".write": "auth != null && auth.uid === $uid"
        }
      }
    }

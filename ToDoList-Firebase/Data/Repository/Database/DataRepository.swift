@@ -14,4 +14,6 @@ protocol DataRepository {
     func updateData(todo: ToDoItem) async -> Result<Bool, Error>
     func deleteData(id: String) async -> Result<Bool, Error>
     func updateUser(user: UserAuth) async -> Result<Bool, Error>
+
+    func getTodoPublisher() -> AnyPublisher<ToDoItem, Never>
 }

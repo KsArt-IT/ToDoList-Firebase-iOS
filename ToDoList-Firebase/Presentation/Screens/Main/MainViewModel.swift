@@ -11,6 +11,7 @@ import Combine
 final class MainViewModel: TaskViewModel, ObservableObject {
 
     @Published var viewState: ViewStates = .none
+    private var cancellables: Set<AnyCancellable> = []
 
     private weak var coordinator: Coordinator?
     private let repository: DataRepository
@@ -35,6 +36,8 @@ final class MainViewModel: TaskViewModel, ObservableObject {
             self.saveLogin()
             // загружаем данные 1 раз
             self.loadData()
+            // наблюдаем за добавлением и изменением записей
+            self.subscribeData()
         } else {
             self.toLogin()
         }
@@ -54,9 +57,9 @@ final class MainViewModel: TaskViewModel, ObservableObject {
         // необходимо установить завтрешний день, а время оставить из даты
         let date = list[index].date
 
-        var currentdate = Date() // Текущая дата
+        var currentDate = Date() // Текущая дата
         let calendar = Calendar.current
-        if let tomorrow = calendar.date(byAdding: .day, value: 1, to: currentdate) {
+        if let tomorrow = calendar.date(byAdding: .day, value: 1, to: currentDate) {
             var dateComponents = calendar.dateComponents([.year, .month, .day], from: tomorrow)
             let timeComponents = calendar.dateComponents([.hour, .minute], from: date)
             dateComponents.hour = timeComponents.hour
@@ -190,6 +193,23 @@ final class MainViewModel: TaskViewModel, ObservableObject {
         // после удаления, не сортируем
         list.removeAll { $0.id == todo.id }
         viewState = .success
+    }
+
+    // MARK: - Monitoring changes in the database
+    private func subscribeData() {
+        // для добавления и изменения элементов списка
+        repository.getTodoPublisher()
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] todo in
+                self?.updateList(todo)
+            }
+            .store(in: &cancellables)
+    }
+
+    override func onCleared() {
+        // Отмена всех подписок
+        cancellables.forEach { $0.cancel() }
+        super.onCleared()
     }
 
     deinit {

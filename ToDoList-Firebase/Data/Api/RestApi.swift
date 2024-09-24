@@ -12,9 +12,16 @@ enum RestApi {
     case todos
     case todo(id: String)
 
-    enum Db {
-        static let todoDB = "todo"
-        static let usersDB = "users"
+    enum DB {
+        static let todo = "todo"
+        static let users = "users"
+
+        enum Users {
+            static let name = "name"
+            static let email = "email"
+            static let photoUrl = "photoUrl"
+            static let last = "last"
+        }
     }
 
     enum Metod {
@@ -29,13 +36,13 @@ enum RestApi {
 extension RestApi {
 
     static func getUrl(_ endpoint: RestApi, uid: String, token: String) -> URL? {
-        var path = switch endpoint {
+        let path = switch endpoint {
             case .users:
-                "\(Db.usersDB)/\(uid)"
+                "\(DB.users)/\(uid)"
             case .todos:
-                "\(Db.todoDB)/\(uid)"
+                "\(DB.todo)/\(uid)"
             case .todo(let id):
-                "\(Db.todoDB)/\(uid)/\(id)"
+                "\(DB.todo)/\(uid)/\(id)"
         }
         guard let url = URL(string: "\(Self.baseURL)/\(path).json?auth=\(token)") else { return nil }
         print("Url= \(url.absoluteString)")

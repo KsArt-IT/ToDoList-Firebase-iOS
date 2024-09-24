@@ -19,17 +19,17 @@ final class FirebaseRestApiDataServiceImpl: DataService {
     // MARK: - To-Do
     public func loadData() async -> Result<[ToDoDTO], Error>  {
         guard let user = UserData.shared.user else { return .failure(NetworkServiceError.cancelled) }
-        guard let url = RestApi.getUrl(.todos, uid: user.id, token: user.token) else { return .failure(NetworkServiceError.invalidRequest) }
+        guard let url = RestApi.getUrl(.todos, uid: user.id, token: user.token) else {
+            return .failure(NetworkServiceError.invalidRequest)
+        }
 
         do {
-            let (json, response) = try await session.data(from: url)
-            print("response=\(response)")
+            let (data, response) = try await session.data(from: url)
             guard checkResponse(response) else {
                 return .failure(NetworkServiceError.invalidResponse)
             }
-            let data = try decoder.decode([String: ToDoDTO].self, from: json)
-            let todos: [ToDoDTO] = Array(data.values)
-            return .success(todos)
+            let todos = try decoder.decode([String: ToDoDTO].self, from: data)
+            return .success(Array(todos.values))
         } catch {
             return .failure(NetworkServiceError.networkError(error))
         }
@@ -37,19 +37,13 @@ final class FirebaseRestApiDataServiceImpl: DataService {
 
     public func saveData(todo: ToDoDTO) async -> Result<Bool, Error> {
         guard let user = UserData.shared.user else { return .failure(NetworkServiceError.cancelled) }
-        guard let url = RestApi.getUrl(.todo(id: todo.id), uid: user.id, token: user.token) else { return .failure(NetworkServiceError.invalidRequest) }
+        guard let url = RestApi.getUrl(.todo(id: todo.id), uid: user.id, token: user.token) else {
+            return .failure(NetworkServiceError.invalidRequest)
+        }
 
         do {
-            let data = try encoder.encode(todo)
-
-            var request = URLRequest(url: url)
-            request.httpMethod = RestApi.Metod.put
-            request.httpBody = data
-
-            let (_, response) = try await session.data(for: request)
-            guard checkResponse(response) else {
-                return .failure(NetworkServiceError.invalidResponse)
-            }
+            let request = try getRequest(url: url, on: RestApi.Metod.put, for: todo)
+            guard try await sendRequest(request) else { return .failure(NetworkServiceError.invalidResponse) }
 
             addOrChangeRecord(todo)
             return .success(true)
@@ -60,19 +54,13 @@ final class FirebaseRestApiDataServiceImpl: DataService {
 
     public func updateData(todo: ToDoDTO) async -> Result<Bool, Error> {
         guard let user = UserData.shared.user else { return .failure(NetworkServiceError.cancelled) }
-        guard let url = RestApi.getUrl(.todo(id: todo.id), uid: user.id, token: user.token) else { return .failure(NetworkServiceError.invalidRequest) }
+        guard let url = RestApi.getUrl(.todo(id: todo.id), uid: user.id, token: user.token) else {
+            return .failure(NetworkServiceError.invalidRequest)
+        }
 
         do {
-            let data = try encoder.encode(todo)
-
-            var request = URLRequest(url: url)
-            request.httpMethod = RestApi.Metod.patch // обновление данных
-            request.httpBody = data
-
-            let (_, response) = try await session.data(for: request)
-            guard checkResponse(response) else {
-                return .failure(NetworkServiceError.invalidResponse)
-            }
+            let request = try getRequest(url: url, on: RestApi.Metod.patch, for: todo)
+            guard try await sendRequest(request) else { return .failure(NetworkServiceError.invalidResponse) }
 
             addOrChangeRecord(todo)
             return .success(true)
@@ -83,16 +71,13 @@ final class FirebaseRestApiDataServiceImpl: DataService {
 
     public func deleteData(id: String) async -> Result<Bool, Error> {
         guard let user = UserData.shared.user else { return .failure(NetworkServiceError.cancelled) }
-        guard let url = RestApi.getUrl(.todo(id: id), uid: user.id, token: user.token) else { return .failure(NetworkServiceError.invalidRequest) }
+        guard let url = RestApi.getUrl(.todo(id: id), uid: user.id, token: user.token) else {
+            return .failure(NetworkServiceError.invalidRequest)
+        }
 
         do {
-            var request = URLRequest(url: url)
-            request.httpMethod = RestApi.Metod.delete
-
-            let (_, response) = try await session.data(for: request)
-            guard checkResponse(response) else {
-                return .failure(NetworkServiceError.invalidResponse)
-            }
+            let request = try getRequest(url: url, on: RestApi.Metod.delete)
+            guard try await sendRequest(request) else { return .failure(NetworkServiceError.invalidResponse) }
 
             return .success(true)
         } catch {
@@ -102,25 +87,13 @@ final class FirebaseRestApiDataServiceImpl: DataService {
 
     // MARK: - User
     public func createUser(user: UserAuth) async -> Result<Bool, Error> {
-        guard let url = RestApi.getUrl(.users, uid: user.id, token: user.token) else { return .failure(NetworkServiceError.invalidRequest) }
+        guard let url = RestApi.getUrl(.users, uid: user.id, token: user.token) else {
+            return .failure(NetworkServiceError.invalidRequest)
+        }
 
         do {
-            let sendData = [
-                "name": user.name,
-                "email": user.email,
-                "photoUrl": user.photoUrl,
-                "last": user.date.ISO8601Format()
-            ]
-            let data = try encoder.encode(sendData)
-
-            var request = URLRequest(url: url)
-            request.httpMethod = RestApi.Metod.put
-            request.httpBody = data
-
-            let (_, response) = try await session.data(for: request)
-            guard checkResponse(response) else {
-                return .failure(NetworkServiceError.invalidResponse)
-            }
+            let request = try getRequest(url: url, on: RestApi.Metod.put, for: userData(user))
+            guard try await sendRequest(request) else { return .failure(NetworkServiceError.invalidResponse) }
 
             return .success(true)
         } catch {
@@ -129,25 +102,13 @@ final class FirebaseRestApiDataServiceImpl: DataService {
     }
 
     public func updateUser(user: UserAuth) async -> Result<Bool, Error> {
-        guard let url = RestApi.getUrl(.users, uid: user.id, token: user.token) else { return .failure(NetworkServiceError.invalidRequest) }
+        guard let url = RestApi.getUrl(.users, uid: user.id, token: user.token) else {
+            return .failure(NetworkServiceError.invalidRequest)
+        }
 
         do {
-            let sendData = [
-                "name": user.name,
-                "email": user.email,
-                "photoUrl": user.photoUrl,
-                "last": user.date.ISO8601Format()
-            ]
-            let data = try encoder.encode(sendData)
-
-            var request = URLRequest(url: url)
-            request.httpMethod = RestApi.Metod.patch
-            request.httpBody = data
-
-            let (_, response) = try await session.data(for: request)
-            guard checkResponse(response) else {
-                return .failure(NetworkServiceError.invalidResponse)
-            }
+            let request = try getRequest(url: url, on: RestApi.Metod.patch, for: userData(user))
+            guard try await sendRequest(request) else { return .failure(NetworkServiceError.invalidResponse) }
 
             return .success(true)
         } catch {
@@ -155,22 +116,45 @@ final class FirebaseRestApiDataServiceImpl: DataService {
         }
     }
 
+    private func userData(_ user: UserAuth) -> [String: String] {
+        [
+            RestApi.DB.Users.name: user.name,
+            RestApi.DB.Users.email: user.email,
+            RestApi.DB.Users.photoUrl: user.photoUrl ?? "",
+            RestApi.DB.Users.last: user.date.ISO8601Format()
+        ]
+    }
+
     public func deleteUser(user: UserAuth) async -> Result<Bool, Error> {
-        guard let url = RestApi.getUrl(.users, uid: user.id, token: user.token) else { return .failure(NetworkServiceError.invalidRequest) }
+        guard let url = RestApi.getUrl(.users, uid: user.id, token: user.token) else {
+            return .failure(NetworkServiceError.invalidRequest)
+        }
 
         do {
-            var request = URLRequest(url: url)
-            request.httpMethod = RestApi.Metod.delete
-
-            let (_, response) = try await session.data(for: request)
-            guard checkResponse(response) else {
-                return .failure(NetworkServiceError.invalidResponse)
-            }
+            let request = try getRequest(url: url, on: RestApi.Metod.delete)
+            guard try await sendRequest(request) else { return .failure(NetworkServiceError.invalidResponse) }
 
             return .success(true)
         } catch {
             return .failure(NetworkServiceError.networkError(error))
         }
+    }
+
+    // MARK: - Encode - Request - Response
+    private func getRequest(url: URL, on httpMethod: String, for data: Encodable? = nil) throws -> URLRequest {
+        var request = URLRequest(url: url)
+        request.httpMethod = httpMethod
+
+        if let data {
+            request.httpBody = try encoder.encode(data)
+        }
+
+        return request
+    }
+
+    private func sendRequest(_ request: URLRequest) async throws -> Bool {
+        let (_, response) = try await session.data(for: request)
+        return checkResponse(response)
     }
 
     private func checkResponse(_ response: URLResponse) -> Bool {

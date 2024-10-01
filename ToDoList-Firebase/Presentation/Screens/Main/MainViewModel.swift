@@ -45,7 +45,7 @@ final class MainViewModel: TaskViewModel, ObservableObject {
 
     private func saveLogin() {
         guard let user = UserData.shared.user else { return }
-        launch { [weak self] in
+        launch(named: #function) { [weak self] in
             _ = await self?.repository.updateUser(user: user)
         }
     }
@@ -110,7 +110,8 @@ final class MainViewModel: TaskViewModel, ObservableObject {
 
     // MARK: - Load and Save to Database
     public func loadData() {
-        launch { [weak self] in
+        // отменяем предыдущую загрузку и загружаем снова
+        launch(named: #function) { [weak self] in
             self?.viewState = .loading
             let result = await self?.repository.loadData()
             switch result {
